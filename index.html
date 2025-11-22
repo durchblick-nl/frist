@@ -1921,12 +1921,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <script>
+        // Global flatpickr instance
+        let datePicker;
+
         document.addEventListener('DOMContentLoaded', function() {
-            flatpickr("#startDate", {
+            datePicker = flatpickr("#startDate", {
                 dateFormat: "d.m.Y",
                 defaultDate: new Date(),
                 locale: {
-                    firstDayOfWeek: 1, // Start week on Monday
+                    firstDayOfWeek: 1,
                     weekdays: {
                         shorthand: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
                         longhand: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
@@ -2489,87 +2492,28 @@
             return new Date(year, month - 1, day);
         }
 
-        // Formatierung des Datums beim Laden der Seite
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateInput = document.getElementById('startDate');
-            
-            // Set the current date as the default value in the German format
-            const today = new Date();
-            const day = String(today.getDate()).padStart(2, '0');
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const year = today.getFullYear();
-            
-            // Set the HTML5 date format for the input
-            dateInput.value = `${year}-${month}-${day}`;
-            
-            // Localization of the datepicker
-            dateInput.addEventListener('focus', function() {
-                this.type = 'date';
-                this.style.width = 'auto';
-            });
-            
-            dateInput.addEventListener('blur', function() {
-                if (!this.value) {
-                    this.type = 'text';
-                }
-            });
-        });
-
-        // Function to format the date
-        function formatDate(input) {
-            if (!input.value) return;
-
-            const date = new Date(input.value);
-            if (isNaN(date.getTime())) return;
-
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-
-            // Display the formatted date in the German format
-            const formattedDate = `${day}.${month}.${year}`;
-            
-            // Keep the HTML5 date format for the input value
-            input.setAttribute('data-formatted', formattedDate);
-            
-            // Update the visible value when the field is not focused
-            if (document.activeElement !== input) {
-                input.type = 'text';
-                input.value = formattedDate;
-            }
-        }
-
-        // Additional event listeners for date processing
-        document.getElementById('startDate').addEventListener('change', function() {
-            formatDate(this);
-        });
-
+        // Form submission handler
         document.getElementById('fristForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const dateInput = document.getElementById('startDate');
-            let startDate;
-            
-            // Parsen des Datums im korrekten Format
-            if (dateInput.type === 'date') {
-                startDate = new Date(dateInput.value);
-            } else {
-                // Parse das formatierte Datum (TT.MM.YYYY)
-                const [day, month, year] = dateInput.value.split('.');
-                startDate = new Date(year, month - 1, day);
+
+            // Get date from flatpickr
+            const startDate = datePicker.selectedDates[0];
+            if (!startDate) {
+                alert(t('select_placeholder'));
+                return;
             }
-            
+
             const fristType = document.getElementById('fristType').value;
             let customValue = null;
-            
+
             if (fristType === 'days_custom') {
                 customValue = parseInt(document.getElementById('customDays').value);
             } else if (fristType === 'months_custom') {
                 customValue = parseInt(document.getElementById('customMonths').value);
             }
-            
+
             if (!fristType || (customValue === null && (fristType === 'days_custom' || fristType === 'months_custom'))) {
-                alert('Bitte geben Sie eine gültige Frist ein.');
+                alert(t('select_placeholder'));
                 return;
             }
 
