@@ -100,3 +100,23 @@ Wird während Gerichtsferien zugestellt → Frist beginnt am ersten Tag **nach**
 - **Shared code**: CSS and JS files are shared between language versions
 - **Form handling**: Each language HTML has hardcoded labels, shared JS handles logic
 - **Print support**: CSS print styles for documentation output
+
+## Zusammengehörige Projekte
+
+Dieses Projekt ist Teil einer Suite von Schweizer Rechtstools:
+
+| Projekt | Beschreibung | URL |
+|---------|--------------|-----|
+| **gerichtskostenrechner** | Gerichtskosten für Zivilverfahren | [github.com/chosee/gerichtskostenrechner](https://github.com/chosee/gerichtskostenrechner) |
+| **verzugszinsrechner** | Verzugszinsen nach OR 104 | [github.com/chosee/verzugszinsrechner](https://github.com/chosee/verzugszinsrechner) |
+| **frist** | Fristenrechner (ZPO, OR, etc.) | [github.com/chosee/frist](https://github.com/chosee/frist) |
+
+Alle drei Projekte:
+- Bilingual (DE/FR)
+- Vanilla HTML/CSS/JS (kein Framework)
+- Client-side Berechnungen (kein Backend)
+- Open Source
+
+## Kontakt
+
+[Durchblick Consultancy BV](https://durchblick.nl)
