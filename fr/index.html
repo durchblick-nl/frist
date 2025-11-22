@@ -172,6 +172,45 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="canton">Canton (for du tribunal)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Sélectionnez le canton du tribunal compétent. Les jours fériés cantonaux seront automatiquement sélectionnés.</span>
+                        </span>
+                    </label>
+                    <select id="canton" name="canton" onchange="selectCanton()">
+                        <option value="">Choisir un canton (optionnel)</option>
+                        <option value="AG">Argovie (AG)</option>
+                        <option value="AI">Appenzell Rhodes-Intérieures (AI)</option>
+                        <option value="AR">Appenzell Rhodes-Extérieures (AR)</option>
+                        <option value="BE">Berne (BE)</option>
+                        <option value="BL">Bâle-Campagne (BL)</option>
+                        <option value="BS">Bâle-Ville (BS)</option>
+                        <option value="FR">Fribourg (FR)</option>
+                        <option value="GE">Genève (GE)</option>
+                        <option value="GL">Glaris (GL)</option>
+                        <option value="GR">Grisons (GR)</option>
+                        <option value="JU">Jura (JU)</option>
+                        <option value="LU">Lucerne (LU)</option>
+                        <option value="NE">Neuchâtel (NE)</option>
+                        <option value="NW">Nidwald (NW)</option>
+                        <option value="OW">Obwald (OW)</option>
+                        <option value="SG">Saint-Gall (SG)</option>
+                        <option value="SH">Schaffhouse (SH)</option>
+                        <option value="SO">Soleure (SO)</option>
+                        <option value="SZ">Schwytz (SZ)</option>
+                        <option value="TG">Thurgovie (TG)</option>
+                        <option value="TI">Tessin (TI)</option>
+                        <option value="UR">Uri (UR)</option>
+                        <option value="VD">Vaud (VD)</option>
+                        <option value="VS">Valais (VS)</option>
+                        <option value="ZG">Zoug (ZG)</option>
+                        <option value="ZH">Zurich (ZH)</option>
+                    </select>
+                    <small class="form-hint">Les jours fériés seront automatiquement définis selon le droit cantonal</small>
+                </div>
+
+                <div class="form-group">
                     <label>Jours fériés à prendre en compte</label>
                     <div class="holiday-selection">
                         <div class="holiday-category">

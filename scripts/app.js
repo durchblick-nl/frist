@@ -4,6 +4,66 @@
 
 let datePicker;
 
+// Kantonale Feiertage - Zuordnung nach Kanton
+// Quelle: Offizielle kantonale Feiertagsregelungen
+const cantonHolidays = {
+    'AG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
+    'AI': ['karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
+    'AR': ['karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
+    'BE': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
+    'BL': ['karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
+    'BS': ['karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
+    'FR': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
+    'GE': ['karfreitag', 'ostermontag', 'pfingstmontag'],
+    'GL': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'allerheiligen', 'stephanstag'],
+    'GR': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
+    'JU': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen'],
+    'LU': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
+    'NE': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag'],
+    'NW': ['karfreitag', 'ostermontag', 'pfingstmontag', 'josephstag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
+    'OW': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
+    'SG': ['karfreitag', 'ostermontag', 'pfingstmontag', 'allerheiligen', 'stephanstag'],
+    'SH': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
+    'SO': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'stephanstag'],
+    'SZ': ['berchtoldstag', 'dreikoenige', 'josephstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
+    'TG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
+    'TI': ['dreikoenige', 'josephstag', 'ostermontag', 'tag_der_arbeit', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
+    'UR': ['berchtoldstag', 'dreikoenige', 'josephstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
+    'VD': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag'],
+    'VS': ['josephstag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis'],
+    'ZG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
+    'ZH': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag']
+};
+
+// Kanton aus URL oder localStorage laden
+function getSelectedCanton() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('canton') || localStorage.getItem('frist-canton') || '';
+}
+
+// Kantonauswahl ändern
+function selectCanton() {
+    const canton = document.getElementById('canton').value;
+    localStorage.setItem('frist-canton', canton);
+
+    // Alle kantonalen Feiertage deselektieren
+    document.querySelectorAll('input[name="holidays"]').forEach(cb => {
+        if (cb.value !== 'all_national') {
+            cb.checked = false;
+        }
+    });
+
+    // Feiertage des gewählten Kantons selektieren
+    if (canton && cantonHolidays[canton]) {
+        cantonHolidays[canton].forEach(holiday => {
+            const checkbox = document.querySelector(`input[name="holidays"][value="${holiday}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+        });
+    }
+}
+
 // Save current language to localStorage for redirect
 (function() {
     const lang = document.documentElement.lang || 'de';
@@ -46,6 +106,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('disclaimerModal').style.display = 'block';
     document.querySelector('.container').style.pointerEvents = 'none';
     document.querySelector('.container').style.opacity = '0.5';
+
+    // Restore saved canton selection
+    const savedCanton = getSelectedCanton();
+    const cantonSelect = document.getElementById('canton');
+    if (cantonSelect && savedCanton) {
+        cantonSelect.value = savedCanton;
+        selectCanton();
+    }
 });
 
 function acceptDisclaimer() {
