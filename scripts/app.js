@@ -116,7 +116,58 @@ document.addEventListener('DOMContentLoaded', function() {
         cantonSelect.value = savedCanton;
         selectCanton();
     }
+
+    // Update court holidays display with actual dates
+    updateCourtHolidaysDisplay();
 });
+
+// Calculate and display actual court holiday dates
+function updateCourtHolidaysDisplay() {
+    const container = document.getElementById('courtHolidaysDates');
+    if (!container) return;
+
+    const lang = document.documentElement.lang || 'de';
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const nextYear = currentYear + 1;
+
+    // Calculate Easter dates
+    const easter = calculateEasterDate(currentYear);
+    const easterStart = new Date(easter);
+    easterStart.setDate(easter.getDate() - 7);
+    const easterEnd = new Date(easter);
+    easterEnd.setDate(easter.getDate() + 7);
+
+    // Check if Easter has passed this year
+    let easterYear = currentYear;
+    if (now > easterEnd) {
+        easterYear = nextYear;
+        const nextEaster = calculateEasterDate(nextYear);
+        easterStart.setTime(nextEaster.getTime());
+        easterStart.setDate(nextEaster.getDate() - 7);
+        easterEnd.setTime(nextEaster.getTime());
+        easterEnd.setDate(nextEaster.getDate() + 7);
+    }
+
+    const dateOptions = { day: 'numeric', month: 'long' };
+    const locale = lang === 'fr' ? 'fr-CH' : 'de-CH';
+
+    const formatDate = (date) => date.toLocaleDateString(locale, dateOptions);
+
+    if (lang === 'fr') {
+        container.innerHTML = `
+            <li><strong>Pâques ${easterYear}:</strong> ${formatDate(easterStart)} – ${formatDate(easterEnd)}</li>
+            <li><strong>Été:</strong> 15 juillet – 15 août</li>
+            <li><strong>Hiver:</strong> 18 décembre – 2 janvier</li>
+        `;
+    } else {
+        container.innerHTML = `
+            <li><strong>Ostern ${easterYear}:</strong> ${formatDate(easterStart)} – ${formatDate(easterEnd)}</li>
+            <li><strong>Sommer:</strong> 15. Juli – 15. August</li>
+            <li><strong>Winter:</strong> 18. Dezember – 2. Januar</li>
+        `;
+    }
+}
 
 function acceptDisclaimer() {
     document.getElementById('disclaimerModal').style.display = 'none';
