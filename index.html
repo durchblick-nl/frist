@@ -1161,13 +1161,49 @@
             opacity: 0.8;
             margin-top: 0.2rem;
         }
+
+        /* Footer */
+        .site-footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .site-footer a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .site-footer a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .footer-content p {
+            margin: 0.5rem 0;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 1rem !important;
+        }
+
+        @media print {
+            .site-footer {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo-container">
-            <img src="https://www.cap.ch/content/dam/onemarketing/azch/allianz-logo/CAP_Logo_Web_NEW.png" 
-                 alt="CAP Rechtsschutz Logo"
+            <img src="https://www.durchblick.nl/images/durchblick_logo.svg"
+                 alt="Durchblick Consultancy Logo"
                  class="logo">
         </div>
 
@@ -1511,14 +1547,27 @@
         </div>
     </div>
 
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>
+                <a href="https://durchblick.nl" target="_blank" rel="noopener">Durchblick Consultancy BV</a>
+                &nbsp;•&nbsp;
+                <a href="https://github.com/chosee/frist" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> Source Code auf GitHub
+                </a>
+            </p>
+            <p class="footer-disclaimer">Dieser Rechner dient nur zur Orientierung. Keine Rechtsberatung.</p>
+        </div>
+    </footer>
+
     <div class="print-header" style="display: none;">
-        <img src="https://www.cap.ch/content/dam/onemarketing/azch/allianz-logo/CAP_Logo_Web_NEW.png" 
-             alt="CAP Rechtsschutz Logo">
+        <img src="https://www.durchblick.nl/images/durchblick_logo.svg"
+             alt="Durchblick Consultancy Logo">
         <h2>Fristberechnung</h2>
     </div>
 
     <div class="print-footer" style="display: none;">
-        <p>Erstellt mit dem CAP Fristenrechner • Datum: ${new Date().toLocaleDateString('de-CH')}</p>
+        <p>Erstellt mit frist.ch • Datum: ${new Date().toLocaleDateString('de-CH')}</p>
         <p>Dieser Ausdruck dient nur zur Orientierung. Für die Wahrung von Fristen sind Sie selbst verantwortlich.</p>
     </div>
 
@@ -1527,14 +1576,14 @@
             <h2>Rechtlicher Hinweis</h2>
             <div class="disclaimer-text">
                 <p><strong>Haftungsausschluss und Nutzungsbedingungen</strong></p>
-                <p>Die CAP Rechtsschutz-Versicherungsgesellschaft AG (nachfolgend "CAP") stellt diesen Fristenrechner als unverbindliches Hilfsmittel zur Verfügung. Trotz sorgfältiger Entwicklung und regelmässiger Wartung kann die CAP keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der Berechnungen und Informationen übernehmen.</p>
-                
+                <p>Durchblick Consultancy BV stellt diesen Fristenrechner als unverbindliches Hilfsmittel zur Verfügung. Trotz sorgfältiger Entwicklung und regelmässiger Wartung kann keine Gewähr für die Richtigkeit, Vollständigkeit und Aktualität der Berechnungen und Informationen übernommen werden.</p>
+
                 <p>Insbesondere wird darauf hingewiesen:</p>
                 <ul>
                     <li>Die Berechnung dient ausschliesslich der Orientierung und ersetzt keine rechtliche Beratung.</li>
                     <li>Für die Wahrung von Fristen sind ausschliesslich Sie selbst verantwortlich.</li>
                     <li>Im Zweifelsfall sollten Sie sich von einer qualifizierten Rechtsanwältin oder einem qualifizierten Rechtsanwalt beraten lassen.</li>
-                    <li>Die CAP schliesst jegliche Haftung für Schäden aus, die sich aus der Nutzung dieses Fristenrechners ergeben könnten.</li>
+                    <li>Durchblick Consultancy BV schliesst jegliche Haftung für Schäden aus, die sich aus der Nutzung dieses Fristenrechners ergeben könnten.</li>
                 </ul>
 
                 <p>Mit der Nutzung des Fristenrechners akzeptieren Sie diese Bedingungen.</p>
