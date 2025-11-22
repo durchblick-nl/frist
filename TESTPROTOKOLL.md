@@ -7,12 +7,39 @@ Dieses Dokument dokumentiert die Überprüfung der Berechnungslogik gegen die ge
 | Artikel | Regel | Status |
 |---------|-------|--------|
 | Art. 142 Abs. 1 | Tagesfristen beginnen am Folgetag | ✅ |
+| **Art. 142 Abs. 1bis** | **Wochenend-Zustellung gilt als Werktag (NEU 1.1.2025)** | ✅ |
 | Art. 142 Abs. 2 | Monatsfristen enden am gleichen Tag im Zielmonat | ✅ |
 | BGer 5A_691/2023 | Monatsfrist beginnt am Tag der Zustellung | ✅ |
 | Art. 142 Abs. 3 | Fristende Sa/So/Feiertag → nächster Werktag | ✅ |
 | Art. 145 Abs. 1 | Gerichtsferien (Fristenstillstand) | ✅ |
 | Art. 145 Abs. 2 | Ausnahmen: Schlichtung/Summarisch | ✅ |
 | Art. 146 | Zustellung während Gerichtsferien | ✅ |
+
+---
+
+## Art. 142 Abs. 1bis ZPO - Wochenend-Zustellung (NEU seit 1.1.2025)
+
+**Gesetzestext:**
+> Wird eine Sendung durch gewöhnliche Post an einem Samstag, Sonntag oder staatlich anerkannten Feiertag zugestellt, so gilt sie als am nächsten Werktag zugestellt.
+
+**Implementierung:**
+```javascript
+// scripts/calculations.js, Zeile 145-152
+function adjustDeliveryDate(date, selectedHolidays) {
+    const adjusted = new Date(date);
+    while (isWeekendOrHoliday(adjusted, selectedHolidays)) {
+        adjusted.setDate(adjusted.getDate() + 1);
+    }
+    return adjusted;
+}
+```
+
+**Beispiel:**
+- Zustellung per A-Post: Samstag, 18. Januar 2025
+- Gilt als zugestellt: Montag, 20. Januar 2025
+- 10-Tage-Frist beginnt am 21. Januar, endet am 30. Januar
+
+**Hinweis:** Diese Regel gilt nur für Zustellung per **gewöhnlicher Post** (A-Post, B-Post), nicht für eingeschriebene Sendungen oder A-Post Plus.
 
 ---
 

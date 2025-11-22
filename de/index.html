@@ -76,6 +76,17 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Zustellungsart (Art. 142 Abs. 1<sup>bis</sup> ZPO)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="weekendDelivery">
+                            Zustellung per gewöhnlicher Post am Samstag/Sonntag/Feiertag
+                        </label>
+                    </div>
+                    <small class="form-hint" id="weekendDeliveryHint">Gilt als zugestellt am nächsten Werktag (seit 1.1.2025)</small>
+                </div>
+
+                <div class="form-group">
                     <label for="fristType" class="required">Art der Frist</label>
                     <select id="fristType"
                             name="fristType"
@@ -263,8 +274,9 @@
                     <i class="fas fa-gavel"></i>
                 </div>
                 <div class="step-content">
-                    <h3>Wichtiger Hinweis</h3>
-                    <p>Gemäss Urteil des Bundesgerichts 5A_691/2023 vom 13. August 2024 beginnt die Frist nach Monaten am Tag des fristauslösenden Ereignisses und nicht am Folgetag.</p>
+                    <h3>Wichtige Hinweise</h3>
+                    <p><strong>BGer 5A_691/2023:</strong> Gemäss Urteil des Bundesgerichts vom 13. August 2024 beginnt die Frist nach Monaten am Tag des fristauslösenden Ereignisses und nicht am Folgetag.</p>
+                    <p style="margin-top: 0.75rem;"><strong>Art. 142 Abs. 1<sup>bis</sup> ZPO (neu seit 1.1.2025):</strong> Wird eine Sendung durch gewöhnliche Post an einem Samstag, Sonntag oder Feiertag zugestellt, gilt die Zustellung als am nächsten Werktag erfolgt.</p>
                 </div>
             </div>
 

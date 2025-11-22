@@ -131,12 +131,13 @@ document.getElementById('fristForm').addEventListener('submit', function(e) {
 
     const useCourtHolidays = document.getElementById('gerichtsferien').checked;
     const selectedHolidays = getSelectedHolidays();
+    const useWeekendDelivery = document.getElementById('weekendDelivery').checked;
 
-    const endDate = calculateDeadline(startDate, fristType, customValue, useCourtHolidays, selectedHolidays);
-    displayResult(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays);
+    const endDate = calculateDeadline(startDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery);
+    displayResult(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery);
 });
 
-function displayResult(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays) {
+function displayResult(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery = false) {
     const result = document.getElementById('result');
     const resultSummary = result.querySelector('.result-summary');
     const lang = document.documentElement.lang || 'de';

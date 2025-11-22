@@ -142,10 +142,25 @@ function isWeekendOrHoliday(date, selectedHolidays) {
     return holidays.includes(dateString);
 }
 
+// Art. 142 Abs. 1bis ZPO: Shift weekend/holiday delivery to next business day
+function adjustDeliveryDate(date, selectedHolidays) {
+    const adjusted = new Date(date);
+    while (isWeekendOrHoliday(adjusted, selectedHolidays)) {
+        adjusted.setDate(adjusted.getDate() + 1);
+    }
+    return adjusted;
+}
+
 // Main deadline calculation function
-function calculateDeadline(startDate, fristType, customValue, useCourtHolidays, selectedHolidays) {
+function calculateDeadline(startDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDeliveryRule = false) {
     let endDate;
     let effectiveStartDate = new Date(startDate);
+
+    // Art. 142 Abs. 1bis ZPO: Weekend/holiday delivery by ordinary post
+    // Delivery on Sa/So/holiday counts as delivered on next business day
+    if (useWeekendDeliveryRule) {
+        effectiveStartDate = adjustDeliveryDate(effectiveStartDate, selectedHolidays);
+    }
 
     // Art. 146 ZPO: Notification during court holidays
     if (useCourtHolidays) {
