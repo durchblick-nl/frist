@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Swiss legal deadline calculator based on the Swiss Civil Procedure Code (ZPO) Articles 142-145.
+**Schweizer Fristenrechner** - Swiss legal deadline calculator based on the Swiss Civil Procedure Code (ZPO) Articles 142-145.
 
 **Live Site**: https://frist.ch
 
@@ -12,38 +12,50 @@ Swiss legal deadline calculator based on the Swiss Civil Procedure Code (ZPO) Ar
 
 Hosted via **Cloudflare Pages** with automatic deployment on push to main branch.
 
-**Build configuration:**
 - Build command: (none)
 - Build output: (none)
-- Root directory: `/`
 - Build system version: v3
 
 ## Tech Stack
 
-- **Frontend**: Vanilla HTML5/CSS3/JavaScript (no build step, single-page app)
+- **Frontend**: Vanilla HTML5/CSS3/JavaScript (single-page app)
 - **Styling**: CSS Variables, Font Awesome icons
 - **No backend** - all calculation logic runs client-side
 
-## Features
+## Legal Calculation Rules
 
-- Calculate legal deadlines per Swiss ZPO
-- Considers weekends and Swiss public holidays
-- Handles court recess periods (Gerichtsferien)
-- Multi-language support
+### Art. 142 ZPO - Fristbeginn
+- Fristen durch Zustellung/Ereignis ausgelöst beginnen am **folgenden Tag**
+- Monatsfristen enden am entsprechenden Tag im Zielmonat
+- Falls Tag nicht existiert: letzter Tag des Monats
 
-## Legal Basis
+**Wichtig**: Gemäss Bundesgerichtsurteil 5A_691/2023 (13.08.2024) beginnt die Monatsfrist am Tag des auslösenden Ereignisses, nicht am Folgetag.
 
-The calculator implements deadline rules from:
-- Art. 142 ZPO - General deadline rules
-- Art. 143 ZPO - Compliance with deadlines
-- Art. 144 ZPO - Extension of deadlines
-- Art. 145 ZPO - Court recess periods
+### Art. 143 ZPO - Fristeinhaltung
+- Eingaben müssen bis zum letzten Tag der Frist erfolgen
+- Bei elektronischer Übermittlung: Empfangszeitpunkt massgebend
+
+### Art. 144 ZPO - Fristerstreckung
+- Gesetzliche Fristen: nicht erstreckbar
+- Gerichtliche Fristen: erstreckbar bei wichtigem Grund
+
+### Art. 145 ZPO - Gerichtsferien
+Fristen stehen still während:
+- **Ostern**: 7 Tage vor bis 7 Tage nach Ostersonntag
+- **Sommer**: 15. Juli bis 15. August
+- **Winter**: 18. Dezember bis 2. Januar
+
+## Architecture
+
+Single HTML file (`index.html`) with embedded CSS and JavaScript:
+- Modular design separating UI components from business logic
+- Client-side date calculations
+- Responsive design for all devices
 
 ## Project Documentation
 
-The `/memory-bank/` directory contains structured context documentation:
-- `projectbrief.md` - Legal requirements and Swiss ZPO rules
-- `techContext.md` - Technical stack details
+The `/memory-bank/` directory contains additional context:
+- `projectbrief.md` - Legal requirements and ZPO rules
+- `productContext.md` - User experience goals
+- `techContext.md` - Technical constraints
 - `systemPatterns.md` - Architecture patterns
-- `activeContext.md` - Current development state
-- `progress.md` - Development milestones
