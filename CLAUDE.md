@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Schweizer Fristenrechner** - Swiss legal deadline calculator based on the Swiss Civil Procedure Code (ZPO) Articles 142-145.
+**Schweizer Fristenrechner** - Swiss legal deadline calculator based on the Swiss Civil Procedure Code (ZPO) Articles 142-146.
 
 **Live Site**: https://frist.ch
 
@@ -19,25 +19,16 @@ Hosted via **Cloudflare Pages** with automatic deployment on push to main branch
 ## Tech Stack
 
 - **Frontend**: Vanilla HTML5/CSS3/JavaScript (single-page app)
-- **Styling**: CSS Variables, Font Awesome icons
+- **Styling**: CSS Variables, Font Awesome icons, Flatpickr date picker
 - **No backend** - all calculation logic runs client-side
 
 ## Legal Calculation Rules
 
 ### Art. 142 ZPO - Fristbeginn
-- Fristen durch Zustellung/Ereignis ausgelöst beginnen am **folgenden Tag**
-- Monatsfristen enden am entsprechenden Tag im Zielmonat
+- **Tagesfristen**: Beginnen am **Folgetag** der Zustellung → `Fristende = Zustelldatum + Anzahl Tage`
+- **Monatsfristen**: Beginnen am **Zustelltag** (BGer 5A_691/2023) → Enden am gleichen Tag im Zielmonat
 - Falls Tag nicht existiert: letzter Tag des Monats
-
-**Wichtig**: Gemäss Bundesgerichtsurteil 5A_691/2023 (13.08.2024) beginnt die Monatsfrist am Tag des auslösenden Ereignisses, nicht am Folgetag.
-
-### Art. 143 ZPO - Fristeinhaltung
-- Eingaben müssen bis zum letzten Tag der Frist erfolgen
-- Bei elektronischer Übermittlung: Empfangszeitpunkt massgebend
-
-### Art. 144 ZPO - Fristerstreckung
-- Gesetzliche Fristen: nicht erstreckbar
-- Gerichtliche Fristen: erstreckbar bei wichtigem Grund
+- Fristende Sa/So/Feiertag → nächster Werktag
 
 ### Art. 145 ZPO - Gerichtsferien
 Fristen stehen still während:
@@ -45,10 +36,26 @@ Fristen stehen still während:
 - **Sommer**: 15. Juli bis 15. August
 - **Winter**: 18. Dezember bis 2. Januar
 
+**Ausnahmen (Abs. 2)**: Keine Gerichtsferien bei Schlichtungs- und Summarverfahren
+
+### Art. 146 ZPO - Zustellung während Gerichtsferien
+Wird während Gerichtsferien zugestellt → Frist beginnt am ersten Tag **nach** Ferienende
+
+## Key Functions in index.html
+
+| Funktion | Zweck |
+|----------|-------|
+| `calculateDeadline()` | Hauptberechnung der Frist |
+| `getCourtHolidayPeriodEnd()` | Art. 146: Ferienende ermitteln |
+| `calculateCourtHolidays()` | Art. 145: Gerichtsferientage berechnen |
+| `calculateEasterDate()` | Gaußsche Osterformel |
+| `isWeekendOrHoliday()` | Art. 142 Abs. 3: Wochenende/Feiertag prüfen |
+| `toggleGerichtsferien()` | Art. 145 Abs. 2: Verfahrensart-Ausnahmen |
+
 ## Architecture
 
 Single HTML file (`index.html`) with embedded CSS and JavaScript:
-- Modular design separating UI components from business logic
-- Client-side date calculations
-- Responsive design for all devices
-
+- All calculation logic in `<script>` tags
+- Form handles user input (date, deadline type, procedure type)
+- Visual calendar display of deadline period
+- Print functionality for documentation

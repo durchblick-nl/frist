@@ -1268,10 +1268,21 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Gerichtsferien berücksichtigen</label>
+                    <label for="verfahrensart">Verfahrensart (Art. 145 Abs. 2 ZPO)</label>
+                    <select id="verfahrensart" name="verfahrensart" onchange="toggleGerichtsferien()">
+                        <option value="ordentlich">Ordentliches Verfahren</option>
+                        <option value="vereinfacht">Vereinfachtes Verfahren</option>
+                        <option value="summarisch">Summarisches Verfahren (keine Gerichtsferien)</option>
+                        <option value="schlichtung">Schlichtungsverfahren (keine Gerichtsferien)</option>
+                    </select>
+                    <small class="form-hint" id="verfahrensartHint">Bei ordentlichen und vereinfachten Verfahren gelten Gerichtsferien</small>
+                </div>
+
+                <div class="form-group" id="gerichtsferienGroup">
+                    <label>Gerichtsferien berücksichtigen (Art. 145 ZPO)</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" id="gerichtsferien">
+                            <input type="checkbox" id="gerichtsferien" checked>
                             Fristenstillstand während der Gerichtsferien beachten
                         </label>
                     </div>
@@ -1562,12 +1573,12 @@
             const fristType = document.getElementById('fristType').value;
             const customDaysGroup = document.getElementById('customDaysGroup');
             const customMonthsGroup = document.getElementById('customMonthsGroup');
-            
+
             customDaysGroup.style.display = 'none';
             customMonthsGroup.style.display = 'none';
             document.getElementById('customDays').required = false;
             document.getElementById('customMonths').required = false;
-            
+
             if (fristType === 'days_custom') {
                 customDaysGroup.style.display = 'block';
                 document.getElementById('customDays').required = true;
@@ -1577,49 +1588,129 @@
             }
         }
 
+        // Art. 145 Abs. 2 ZPO: Gerichtsferien gelten nicht für Schlichtungs- und Summarverfahren
+        function toggleGerichtsferien() {
+            const verfahrensart = document.getElementById('verfahrensart').value;
+            const gerichtsferienGroup = document.getElementById('gerichtsferienGroup');
+            const gerichtsferienCheckbox = document.getElementById('gerichtsferien');
+            const hint = document.getElementById('verfahrensartHint');
+
+            if (verfahrensart === 'summarisch' || verfahrensart === 'schlichtung') {
+                gerichtsferienGroup.style.display = 'none';
+                gerichtsferienCheckbox.checked = false;
+                hint.textContent = 'Gerichtsferien gelten nicht für dieses Verfahren (Art. 145 Abs. 2 ZPO)';
+                hint.style.color = 'var(--accent-color)';
+            } else {
+                gerichtsferienGroup.style.display = 'block';
+                gerichtsferienCheckbox.checked = true;
+                hint.textContent = 'Bei ordentlichen und vereinfachten Verfahren gelten Gerichtsferien';
+                hint.style.color = '#666';
+            }
+        }
+
+        // Art. 146 ZPO: Ermittle das Ende der aktuellen Gerichtsferienperiode
+        function getCourtHolidayPeriodEnd(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const day = date.getDate();
+
+            // Osterferien berechnen
+            const easter = calculateEasterDate(year);
+            const easterStart = new Date(easter);
+            easterStart.setDate(easter.getDate() - 7);
+            const easterEnd = new Date(easter);
+            easterEnd.setDate(easter.getDate() + 7);
+
+            // Prüfe Osterferien
+            if (date >= easterStart && date <= easterEnd) {
+                const nextDay = new Date(easterEnd);
+                nextDay.setDate(nextDay.getDate() + 1);
+                return nextDay;
+            }
+
+            // Sommerferien (15. Juli - 15. August)
+            const summerStart = new Date(year, 6, 15);
+            const summerEnd = new Date(year, 7, 15);
+            if (date >= summerStart && date <= summerEnd) {
+                return new Date(year, 7, 16); // 16. August
+            }
+
+            // Winterferien (18. Dezember - 2. Januar)
+            const winterStart = new Date(year, 11, 18);
+            const winterEndCurrentYear = new Date(year, 11, 31);
+            const winterEndNextYear = new Date(year + 1, 0, 2);
+
+            // Dezember des aktuellen Jahres
+            if (date >= winterStart && date <= winterEndCurrentYear) {
+                return new Date(year + 1, 0, 3); // 3. Januar nächstes Jahr
+            }
+
+            // Januar des aktuellen Jahres (Winterferien vom Vorjahr)
+            const winterStartPrevYear = new Date(year - 1, 11, 18);
+            const janEnd = new Date(year, 0, 2);
+            if (month === 0 && day <= 2) {
+                return new Date(year, 0, 3); // 3. Januar
+            }
+
+            return null; // Nicht in Gerichtsferien
+        }
+
         function calculateDeadline(startDate, fristType, customValue) {
             let endDate;
-            
-            // Erste Berechnung des Enddatums (ohne Gerichtsferien)
+            let effectiveStartDate = new Date(startDate);
+
+            // Art. 146 ZPO: Zustellung während Gerichtsferien
+            // Frist beginnt erst am ersten Tag nach Ende der Gerichtsferien
+            if (document.getElementById('gerichtsferien').checked) {
+                const courtHolidayEnd = getCourtHolidayPeriodEnd(startDate);
+                if (courtHolidayEnd) {
+                    effectiveStartDate = courtHolidayEnd;
+                }
+            }
+
+            // Erste Berechnung des Enddatums
+            // Bei Zustellung während Gerichtsferien wird effectiveStartDate verwendet (Art. 146 ZPO)
             if (fristType.startsWith('months_')) {
-                // Monatsfrist: Beginnt AM TAG der Zustellung
+                // Monatsfrist: Beginnt AM TAG der Zustellung (BGer 5A_691/2023)
                 const months = customValue || parseInt(fristType.split('_')[1]);
-                
+
                 // Zielmonat und -jahr berechnen
-                const targetMonth = startDate.getMonth() + months;
-                const targetYear = startDate.getFullYear() + Math.floor(targetMonth / 12);
+                const targetMonth = effectiveStartDate.getMonth() + months;
+                const targetYear = effectiveStartDate.getFullYear() + Math.floor(targetMonth / 12);
                 const normalizedTargetMonth = targetMonth % 12;
-                
+
                 // Letzter Tag des Zielmonats
                 const lastDayOfTargetMonth = new Date(targetYear, normalizedTargetMonth + 1, 0).getDate();
-                
+
                 // Wenn der ursprüngliche Tag größer ist als die Anzahl Tage im Zielmonat,
-                // nehmen wir den letzten Tag des Zielmonats
-                const targetDay = Math.min(startDate.getDate(), lastDayOfTargetMonth);
-                
+                // nehmen wir den letzten Tag des Zielmonats (Art. 142 Abs. 2 ZPO)
+                const targetDay = Math.min(effectiveStartDate.getDate(), lastDayOfTargetMonth);
+
                 // Neues Enddatum erstellen
                 endDate = new Date(targetYear, normalizedTargetMonth, targetDay);
             } else {
-                // Tagesfrist: Beginnt am Tag NACH der Zustellung
-                endDate = new Date(startDate);
+                // Tagesfrist: Beginnt am Tag NACH der Zustellung (Art. 142 Abs. 1 ZPO)
+                // Tag 1 = Folgetag der Zustellung, daher: Zustelldatum + Anzahl Tage
+                endDate = new Date(effectiveStartDate);
                 const days = customValue || parseInt(fristType.split('_')[1]);
-                endDate.setDate(endDate.getDate() + days + 1);
+                endDate.setDate(endDate.getDate() + days);
             }
             
-            // Wenn Gerichtsferien berücksichtigt werden sollen
+            // Wenn Gerichtsferien berücksichtigt werden sollen (Art. 145 ZPO)
+            // Hinweis: Bei Zustellung während Gerichtsferien wurde effectiveStartDate bereits angepasst (Art. 146)
             if (document.getElementById('gerichtsferien').checked) {
-                // Zähle einfach die blauen Tage zwischen Start und Ende
+                // Zähle die Gerichtsferientage zwischen effectiveStartDate und endDate
                 let courtHolidayCount = 0;
-                let currentDate = new Date(startDate);
-                
+                let currentDate = new Date(effectiveStartDate);
+
                 while (currentDate <= endDate) {
                     if (isInCourtHolidays(currentDate)) {
                         courtHolidayCount++;
                     }
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
-                
-                // Verlängere die Frist um die Anzahl der Gerichtsferientage
+
+                // Verlängere die Frist um die Anzahl der Gerichtsferientage (Fristenstillstand)
                 if (courtHolidayCount > 0) {
                     endDate.setDate(endDate.getDate() + courtHolidayCount);
                 }
@@ -1649,7 +1740,7 @@
                 endDateWithoutCourtHolidays = new Date(targetYear, normalizedTargetMonth, targetDay);
             } else {
                 const days = customValue || parseInt(fristType.split('_')[1]);
-                endDateWithoutCourtHolidays.setDate(endDateWithoutCourtHolidays.getDate() + days + 1);
+                endDateWithoutCourtHolidays.setDate(endDateWithoutCourtHolidays.getDate() + days);
             }
             
             // Berechne die Anzahl der Tage ohne Gerichtsferien
@@ -1831,27 +1922,28 @@
             displayResult(startDate, endDate, fristType, customValue);
         });
 
-        // Erweiterte isWeekendOrHoliday Funktion
+        // Erweiterte isWeekendOrHoliday Funktion (Art. 142 Abs. 3 ZPO)
         function isWeekendOrHoliday(date) {
-            // Wochenende prüfen
+            // Wochenende prüfen (Samstag = 6, Sonntag = 0)
             if (date.getDay() === 0 || date.getDay() === 6) return true;
-            
+
             const dateString = date.toISOString().split('T')[0];
-            const selectedHolidays = getSelectedHolidays();
-            
+            const year = date.getFullYear();
+            const selectedHolidays = getSelectedHolidays(year, year);
+
             return selectedHolidays.includes(dateString);
         }
 
-        function getSelectedHolidays() {
+        // Berechne Feiertage für ein bestimmtes Jahr
+        function getHolidaysForYear(year) {
             const holidays = [];
-            const year = new Date().getFullYear();
-            
+
             // Nationale Feiertage
             const nationalHolidaysCheckbox = document.querySelector('input[value="all_national"]');
             if (nationalHolidaysCheckbox && nationalHolidaysCheckbox.checked) {
                 holidays.push(
                     `${year}-01-01`, // Neujahr
-                    `${year}-05-09`, // Auffahrt (Datum muss dynamisch berechnet werden)
+                    calculateEasterRelatedDate(year, 39), // Auffahrt (39 Tage nach Ostern)
                     `${year}-08-01`, // Nationalfeiertag
                     `${year}-12-25`  // Weihnachten
                 );
@@ -1860,8 +1952,8 @@
             // Kantonale Feiertage
             const selectedKantonalHolidays = document.querySelectorAll('input[name="holidays"]:checked');
             selectedKantonalHolidays.forEach(checkbox => {
-                if (checkbox.value === 'all_national') return; // Nationale Feiertage überspringen
-                
+                if (checkbox.value === 'all_national') return;
+
                 const holidayDates = {
                     'berchtoldstag': `${year}-01-02`,
                     'dreikoenige': `${year}-01-06`,
@@ -1882,6 +1974,19 @@
                 }
             });
 
+            return holidays;
+        }
+
+        // Hole alle relevanten Feiertage für den Fristzeitraum
+        function getSelectedHolidays(startYear, endYear) {
+            // Falls keine Jahre übergeben, nutze aktuelles Jahr (Fallback)
+            if (!startYear) startYear = new Date().getFullYear();
+            if (!endYear) endYear = startYear;
+
+            const holidays = [];
+            for (let year = startYear; year <= endYear; year++) {
+                holidays.push(...getHolidaysForYear(year));
+            }
             return holidays;
         }
 
@@ -1912,7 +2017,8 @@
         // Hilfsfunktionen für die Datumsüberprüfung
         function isHolidayDate(date) {
             const dateString = date.toISOString().split('T')[0];
-            const selectedHolidays = getSelectedHolidays();
+            const year = date.getFullYear();
+            const selectedHolidays = getSelectedHolidays(year, year);
             return selectedHolidays.includes(dateString);
         }
 
