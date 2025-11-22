@@ -64,7 +64,12 @@
         <div class="calculator-card">
             <form id="fristForm">
                 <div class="form-group">
-                    <label for="startDate" class="required">Zustellungsdatum des Entscheids</label>
+                    <label for="startDate" class="required">Zustellungsdatum des Entscheids
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Das Datum, an dem Sie den Entscheid tatsächlich erhalten haben. Bei Einschreiben: Datum der Abholung oder Ende der 7-tägigen Abholfrist.</span>
+                        </span>
+                    </label>
                     <input type="text"
                            id="startDate"
                            name="startDate"
@@ -76,7 +81,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Zustellungsart (Art. 142 Abs. 1<sup>bis</sup> ZPO)</label>
+                    <label>Zustellungsart (Art. 142 Abs. 1<sup>bis</sup> ZPO)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Nur für gewöhnliche Post (A-Post, B-Post) relevant. Bei Einschreiben oder A-Post Plus gilt das tatsächliche Zustelldatum.</span>
+                        </span>
+                    </label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="weekendDelivery">
@@ -87,7 +97,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="fristType" class="required">Art der Frist</label>
+                    <label for="fristType" class="required">Art der Frist
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Tagesfristen beginnen am Folgetag der Zustellung. Monatsfristen beginnen am Tag der Zustellung und enden am gleichen Tag im Zielmonat.</span>
+                        </span>
+                    </label>
                     <select id="fristType"
                             name="fristType"
                             required
@@ -131,7 +146,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="verfahrensart">Verfahrensart (Art. 145 Abs. 2 ZPO)</label>
+                    <label for="verfahrensart">Verfahrensart (Art. 145 Abs. 2 ZPO)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Bei summarischen und Schlichtungsverfahren stehen die Fristen während der Gerichtsferien nicht still. Die Frist läuft weiter.</span>
+                        </span>
+                    </label>
                     <select id="verfahrensart" name="verfahrensart" onchange="toggleGerichtsferien()">
                         <option value="ordentlich">Ordentliches Verfahren</option>
                         <option value="vereinfacht">Vereinfachtes Verfahren</option>

@@ -64,7 +64,12 @@
         <div class="calculator-card">
             <form id="fristForm">
                 <div class="form-group">
-                    <label for="startDate" class="required">Date de notification de la décision</label>
+                    <label for="startDate" class="required">Date de notification de la décision
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">La date à laquelle vous avez effectivement reçu la décision. Pour les envois recommandés : date du retrait ou fin du délai de garde de 7 jours.</span>
+                        </span>
+                    </label>
                     <input type="text"
                            id="startDate"
                            name="startDate"
@@ -76,7 +81,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Mode de notification (art. 142 al. 1<sup>bis</sup> CPC)</label>
+                    <label>Mode de notification (art. 142 al. 1<sup>bis</sup> CPC)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Pertinent uniquement pour le courrier ordinaire (A-Post, B-Post). Ne s'applique pas aux envois recommandés ni A-Post Plus.</span>
+                        </span>
+                    </label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
                             <input type="checkbox" id="weekendDelivery">
@@ -87,7 +97,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="fristType" class="required">Type de délai</label>
+                    <label for="fristType" class="required">Type de délai
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Les délais en jours commencent le lendemain de la notification. Les délais en mois commencent le jour même de la notification (TF 5A_691/2023).</span>
+                        </span>
+                    </label>
                     <select id="fristType"
                             name="fristType"
                             required
@@ -131,7 +146,12 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="verfahrensart">Type de procédure (art. 145 al. 2 CPC)</label>
+                    <label for="verfahrensart">Type de procédure (art. 145 al. 2 CPC)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Pour les procédures sommaires et de conciliation, les féries judiciaires ne s'appliquent pas. Le délai court sans interruption.</span>
+                        </span>
+                    </label>
                     <select id="verfahrensart" name="verfahrensart" onchange="toggleGerichtsferien()">
                         <option value="ordentlich">Procédure ordinaire</option>
                         <option value="vereinfacht">Procédure simplifiée</option>
