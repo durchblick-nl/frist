@@ -194,4 +194,4 @@ MIT
 
 ---
 
-[Durchblick Consultancy BV](https://durchblick.nl) • [Source Code](https://github.com/chosee/frist)
+[Durchblick Consultancy BV](https://durchblick.nl) • [Source Code](https://github.com/durchblick-nl/frist)
