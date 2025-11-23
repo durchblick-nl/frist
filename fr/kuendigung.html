@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculateur de délais de résiliation suisse</title>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-    <meta name="description" content="Calculez les délais de résiliation pour contrats de travail et de bail selon le droit suisse. CO art. 335, CO art. 266.">
-    <meta name="keywords" content="délai de résiliation, calculateur résiliation, contrat de travail, bail, CO art. 335, CO art. 266, Suisse">
+    <meta name="description" content="Calculez les délais de résiliation pour contrats de travail, baux, assurances et abonnements selon le droit suisse. CO, LCA, LAMal.">
+    <meta name="keywords" content="délai de résiliation, calculateur résiliation, contrat de travail, bail, assurance, caisse maladie, fitness, mobile, CO art. 335, CO art. 266, LCA, LAMal, Suisse">
     <meta name="author" content="Durchblick Consultancy BV">
 
     <!-- Open Graph -->
@@ -211,6 +211,18 @@
                             <option value="rent_room">Chambre meublée (2 semaines pour fin de mois)</option>
                             <option value="rent_parking">Place de parc (2 semaines pour fin de mois)</option>
                         </optgroup>
+                        <optgroup label="Assurances">
+                            <option value="insurance_health_basic">Assurance maladie de base (30 novembre)</option>
+                            <option value="insurance_health_extra">Assurance complémentaire (3 mois)</option>
+                            <option value="insurance_property">Assurance RC/auto (3 mois)</option>
+                            <option value="insurance_life">Assurance vie (3 mois)</option>
+                        </optgroup>
+                        <optgroup label="Abonnements">
+                            <option value="subscription_fitness">Fitness (3 mois avant échéance)</option>
+                            <option value="subscription_mobile">Mobile (60 jours)</option>
+                            <option value="subscription_internet">Internet/TV (60 jours)</option>
+                            <option value="subscription_streaming">Streaming/Magazine (1 mois)</option>
+                        </optgroup>
                         <optgroup label="Autres contrats">
                             <option value="custom">Délai individuel</option>
                         </optgroup>
@@ -305,6 +317,30 @@
                     <p>Délai de résiliation: <strong>6 mois</strong></p>
                     <p>Terme: <strong>Terme usuel local</strong> (généralement fin de trimestre)</p>
                     <p style="margin-top: 0.5rem;">Pour les baux commerciaux, des délais contractuels plus longs sont courants.</p>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Assurances (LCA/LAMal)</h3>
+                    <p><strong>Assurance de base:</strong> Résiliation jusqu'au 30 novembre pour changement au 1er janvier</p>
+                    <p><strong>Assurances choses:</strong> 3 mois pour fin d'année d'assurance</p>
+                    <p style="margin-top: 0.5rem;">Depuis LCA 2022: Tous les contrats résiliables après 3 ans avec préavis de 3 mois.</p>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Abonnements</h3>
+                    <p><strong>Fitness:</strong> Généralement 3 mois avant échéance</p>
+                    <p><strong>Mobile/Internet:</strong> Généralement 60 jours avant échéance</p>
+                    <p style="margin-top: 0.5rem;">En cas de déménagement &gt;30km: Résiliation extraordinaire souvent possible.</p>
                 </div>
             </div>
 
@@ -469,6 +505,64 @@
                 article: 'Contrat',
                 custom: true,
                 info: 'Entrez le délai de résiliation convenu contractuellement.'
+            },
+            // Insurance contracts
+            'insurance_health_basic': {
+                name: 'Assurance maladie de base',
+                article: 'LAMal art. 7',
+                fixedDate: { month: 10, day: 30 }, // November 30
+                term: 'year_end',
+                info: 'Assurance de base: La résiliation doit parvenir à l\'assureur jusqu\'au 30 novembre. Changement au 1er janvier.'
+            },
+            'insurance_health_extra': {
+                name: 'Assurance complémentaire',
+                article: 'LCA art. 35',
+                months: 3,
+                term: 'year_end',
+                info: 'Assurance complémentaire: Généralement 3 mois de préavis pour fin d\'année. Vérifiez votre police!'
+            },
+            'insurance_property': {
+                name: 'Assurance RC/auto',
+                article: 'LCA art. 35',
+                months: 3,
+                term: 'policy_year',
+                info: 'Assurances choses: 3 mois de préavis pour fin d\'année d\'assurance. Depuis LCA 2022 toujours résiliable après 3 ans.'
+            },
+            'insurance_life': {
+                name: 'Assurance vie',
+                article: 'LCA art. 35',
+                months: 3,
+                term: 'policy_year',
+                info: 'Assurance vie: 3 mois de préavis. Attention: La valeur de rachat peut être inférieure aux primes versées.'
+            },
+            // Subscription contracts
+            'subscription_fitness': {
+                name: 'Fitness',
+                article: 'Contrat/CG',
+                months: 3,
+                term: 'contract_end',
+                info: 'Abonnements fitness: Généralement résiliables 3 mois avant échéance. Sans résiliation, renouvellement automatique. Résiliation extraordinaire possible en cas de déménagement >30km.'
+            },
+            'subscription_mobile': {
+                name: 'Mobile',
+                article: 'Contrat/CG',
+                days: 60,
+                term: 'contract_end',
+                info: 'Téléphonie mobile: Généralement 60 jours de préavis. Sans résiliation, renouvellement automatique. Vérifiez vos CG!'
+            },
+            'subscription_internet': {
+                name: 'Internet/TV',
+                article: 'Contrat/CG',
+                days: 60,
+                term: 'contract_end',
+                info: 'Internet/TV: Généralement 60 jours de préavis avant fin de durée minimale. Renouvellement automatique courant.'
+            },
+            'subscription_streaming': {
+                name: 'Streaming/Magazine',
+                article: 'Contrat/CG',
+                months: 1,
+                term: 'month_end',
+                info: 'Services de streaming: Généralement résiliables mensuellement. Magazines: Souvent 1 mois pour fin de période.'
             }
         };
 
@@ -481,7 +575,8 @@
 
             if (type) {
                 let periodText = '';
-                if (type.days) periodText = `${type.days} jours`;
+                if (type.fixedDate) periodText = 'Délai fixe (30 novembre)';
+                else if (type.days) periodText = `${type.days} jours`;
                 else if (type.weeks) periodText = `${type.weeks} semaines`;
                 else if (type.months) periodText = `${type.months} mois`;
                 else if (type.custom) periodText = 'Individuel';
@@ -490,6 +585,9 @@
                 if (type.term === 'any') termText = 'n\'importe quand';
                 else if (type.term === 'month_end') termText = 'pour fin de mois';
                 else if (type.term === 'quarter_end') termText = 'pour fin de trimestre';
+                else if (type.term === 'year_end') termText = 'pour fin d\'année';
+                else if (type.term === 'policy_year') termText = 'pour fin d\'année d\'assurance';
+                else if (type.term === 'contract_end') termText = 'avant échéance';
 
                 infoDiv.innerHTML = `
                     <h4>${type.name} – ${type.article}</h4>
@@ -560,8 +658,29 @@
             return new Date(year, targetMonth + 1, 0);
         }
 
+        function getYearEnd(date) {
+            return new Date(date.getFullYear(), 11, 31); // December 31
+        }
+
+        function getNextYearEnd(date) {
+            const yearEnd = getYearEnd(date);
+            if (date <= yearEnd) return yearEnd;
+            return new Date(date.getFullYear() + 1, 11, 31);
+        }
+
         function getTerminationDate(noticeDate, type, customMonths, customTerm) {
             let minEndDate;
+
+            // Special case: fixed deadline (e.g., Krankenkasse Nov 30)
+            if (type.fixedDate) {
+                const thisYear = new Date(noticeDate.getFullYear(), type.fixedDate.month, type.fixedDate.day);
+                const nextYear = new Date(noticeDate.getFullYear() + 1, type.fixedDate.month, type.fixedDate.day);
+                // If we're past this year's deadline, return next year's year end
+                if (noticeDate > thisYear) {
+                    return new Date(noticeDate.getFullYear() + 1, 11, 31); // Next year Dec 31
+                }
+                return new Date(noticeDate.getFullYear(), 11, 31); // This year Dec 31
+            }
 
             if (type.custom) {
                 minEndDate = addMonths(noticeDate, parseInt(customMonths) || 1);
@@ -587,6 +706,13 @@
                     endDate = getNextQuarterEnd(addMonths(endDate, 1));
                 }
                 return endDate;
+            } else if (term === 'year_end') {
+                // End of calendar year
+                return getNextYearEnd(minEndDate);
+            } else if (term === 'policy_year' || term === 'contract_end') {
+                // For policy year and contract end, we show based on notice period
+                // User should check their contract for exact date
+                return minEndDate;
             } else {
                 return minEndDate;
             }
@@ -616,7 +742,9 @@
             const terminationDate = getTerminationDate(noticeDate, type, customMonths, customTerm);
 
             let periodDesc = '';
-            if (type.custom) {
+            if (type.fixedDate) {
+                periodDesc = 'jusqu\'au 30 novembre';
+            } else if (type.custom) {
                 periodDesc = `${customMonths} mois`;
             } else if (type.days) {
                 periodDesc = `${type.days} jours`;
@@ -630,6 +758,9 @@
             let term = type.custom ? customTerm : type.term;
             if (term === 'month_end') termDesc = 'pour fin de mois';
             else if (term === 'quarter_end') termDesc = 'pour fin de trimestre';
+            else if (term === 'year_end') termDesc = 'pour fin d\'année';
+            else if (term === 'policy_year') termDesc = 'pour fin d\'année d\'assurance';
+            else if (term === 'contract_end') termDesc = 'avant échéance';
             else termDesc = 'n\'importe quand';
 
             let resultHTML = `
@@ -678,6 +809,24 @@
                     <div class="warning" style="margin-top: 20px;">
                         <i class="fas fa-info-circle"></i>
                         <strong>Remarque:</strong> La résiliation de bail d'habitation doit être faite sur formule officielle. Elle doit parvenir au destinataire au plus tard le dernier jour avant le début du délai.
+                    </div>
+                `;
+            }
+
+            if (contractTypeValue.startsWith('insurance_')) {
+                resultHTML += `
+                    <div class="warning" style="margin-top: 20px;">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Remarque:</strong> La résiliation doit parvenir à l'assureur (pas le cachet de la poste). Vérifiez votre police pour l'année d'assurance exacte. Après sinistre: droit de résiliation extraordinaire dans les 14 jours.
+                    </div>
+                `;
+            }
+
+            if (contractTypeValue.startsWith('subscription_')) {
+                resultHTML += `
+                    <div class="warning" style="margin-top: 20px;">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Remarque:</strong> Les délais indiqués sont usuels dans la branche. Vérifiez vos CG pour le délai exact! Sans résiliation à temps, renouvellement automatique habituel.
                     </div>
                 `;
             }

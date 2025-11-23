@@ -1,4 +1,4 @@
-# Schweizer Fristenrechner | Calculateur de délais suisse
+# Schweizer Rechtstools | Outils juridiques suisses
 
 🇩🇪 [Deutsch](#deutsch) | 🇫🇷 [Français](#français)
 
@@ -7,9 +7,17 @@
 <a name="deutsch"></a>
 ## 🇩🇪 Deutsch
 
-Berechne juristische Fristen nach der Schweizerischen Zivilprozessordnung (ZPO).
+Suite von Schweizer Rechtsrechnern für Fristen, Verjährung und Kündigungen.
 
 **[frist.ch](https://frist.ch)**
+
+### Verfügbare Tools
+
+| Tool | Beschreibung | Link |
+|------|--------------|------|
+| **Fristenrechner** | Prozessuale Fristen nach ZPO Art. 142-146 | [frist.ch/de/](https://frist.ch/de/) |
+| **Verjährungsrechner** | Verjährungsfristen nach OR Art. 60, 127, 128, 210 | [frist.ch/de/verjaehrung.html](https://frist.ch/de/verjaehrung.html) |
+| **Kündigungsfristenrechner** | Kündigungsfristen für Arbeits-, Miet-, Versicherungs- und Aboverträge | [frist.ch/de/kuendigung.html](https://frist.ch/de/kuendigung.html) |
 
 ### Berechnungsregeln
 
@@ -80,9 +88,17 @@ Der Fristenrechner bietet eine Kantonauswahl, die automatisch die im jeweiligen 
 <a name="français"></a>
 ## 🇫🇷 Français
 
-Calculez les délais juridiques selon le Code de procédure civile suisse (CPC).
+Suite d'outils juridiques suisses pour les délais, la prescription et les résiliations.
 
 **[frist.ch](https://frist.ch)**
+
+### Outils disponibles
+
+| Outil | Description | Lien |
+|-------|-------------|------|
+| **Calculateur de délais** | Délais procéduraux selon CPC art. 142-146 | [frist.ch/fr/](https://frist.ch/fr/) |
+| **Calculateur de prescription** | Délais de prescription selon CO art. 60, 127, 128, 210 | [frist.ch/fr/verjaehrung.html](https://frist.ch/fr/verjaehrung.html) |
+| **Calculateur de résiliation** | Délais de résiliation pour contrats de travail, bail, assurance et abonnements | [frist.ch/fr/kuendigung.html](https://frist.ch/fr/kuendigung.html) |
 
 ### Règles de calcul
 
@@ -154,15 +170,21 @@ Le calculateur propose une sélection de canton qui active automatiquement les j
 
 ```
 frist/
-├── index.html           # Spracherkennung / Détection de langue
-├── de/index.html        # Deutsche Version
-├── fr/index.html        # Version française
-├── css/styles.css       # Gemeinsame Styles / Styles partagés
+├── index.html               # Spracherkennung / Détection de langue
+├── de/
+│   ├── index.html           # Fristenrechner
+│   ├── verjaehrung.html     # Verjährungsrechner
+│   └── kuendigung.html      # Kündigungsfristenrechner
+├── fr/
+│   ├── index.html           # Calculateur de délais
+│   ├── verjaehrung.html     # Calculateur de prescription
+│   └── kuendigung.html      # Délais de résiliation
+├── css/styles.css           # Gemeinsame Styles / Styles partagés
 ├── scripts/
-│   ├── calculations.js  # Berechnungslogik / Logique de calcul
-│   └── app.js           # UI-Logik / Logique UI
-├── images/              # OG-Bilder / Images OG (1200x630)
-└── test.js              # Tests (node test.js)
+│   ├── calculations.js      # Berechnungslogik / Logique de calcul
+│   └── app.js               # UI-Logik / Logique UI
+├── images/                  # OG-Bilder / Images OG (1200x630)
+└── test.js                  # Tests (node test.js)
 ```
 
 - Vanilla HTML/CSS/JavaScript (kein Framework)

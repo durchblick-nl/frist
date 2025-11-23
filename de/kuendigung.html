@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schweizer Kündigungsfristenrechner - Kündigungsfristen berechnen</title>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-    <meta name="description" content="Berechnen Sie Kündigungsfristen für Arbeitsverträge und Mietverträge nach Schweizer Recht. OR Art. 335, OR Art. 266.">
-    <meta name="keywords" content="Kündigungsfrist, Kündigungsrechner, Arbeitsvertrag, Mietvertrag, OR Art. 335, OR Art. 266, Schweiz, Kündigung">
+    <meta name="description" content="Berechnen Sie Kündigungsfristen für Arbeitsverträge, Mietverträge, Versicherungen und Abos nach Schweizer Recht. OR, VVG, KVG.">
+    <meta name="keywords" content="Kündigungsfrist, Kündigungsrechner, Arbeitsvertrag, Mietvertrag, Versicherung, Krankenkasse, Fitness-Abo, Handy-Abo, OR Art. 335, OR Art. 266, VVG, KVG, Schweiz, Kündigung">
     <meta name="author" content="Durchblick Consultancy BV">
 
     <!-- Open Graph -->
@@ -211,6 +211,18 @@
                             <option value="rent_room">Möbliertes Zimmer (2 Wochen auf Monatsende)</option>
                             <option value="rent_parking">Parkplatz (2 Wochen auf Monatsende)</option>
                         </optgroup>
+                        <optgroup label="Versicherungen">
+                            <option value="insurance_health_basic">Krankenkasse Grundversicherung (30. November)</option>
+                            <option value="insurance_health_extra">Krankenkasse Zusatzversicherung (3 Monate)</option>
+                            <option value="insurance_property">Sach-/Autoversicherung (3 Monate)</option>
+                            <option value="insurance_life">Lebensversicherung (3 Monate)</option>
+                        </optgroup>
+                        <optgroup label="Abonnemente">
+                            <option value="subscription_fitness">Fitness-Abo (3 Monate vor Ablauf)</option>
+                            <option value="subscription_mobile">Handy-Abo (60 Tage)</option>
+                            <option value="subscription_internet">Internet/TV (60 Tage)</option>
+                            <option value="subscription_streaming">Streaming/Zeitschrift (1 Monat)</option>
+                        </optgroup>
                         <optgroup label="Andere Verträge">
                             <option value="custom">Individuelle Kündigungsfrist</option>
                         </optgroup>
@@ -320,6 +332,30 @@
                     <p>Kündigungsfrist: <strong>6 Monate</strong></p>
                     <p>Kündigungstermin: <strong>Ortsüblicher Termin</strong> (meist Quartalsende)</p>
                     <p style="margin-top: 0.5rem;">Bei Geschäftsmiete sind längere vertragliche Fristen üblich.</p>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Versicherungen (VVG/KVG)</h3>
+                    <p><strong>Krankenkasse Grund:</strong> Kündigung bis 30. November für Wechsel per 1. Januar</p>
+                    <p><strong>Sachversicherung:</strong> 3 Monate auf Ende Versicherungsjahr</p>
+                    <p style="margin-top: 0.5rem;">Seit VVG 2022: Alle Verträge kündbar nach 3 Jahren mit 3 Monaten Frist.</p>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Abonnemente</h3>
+                    <p><strong>Fitness:</strong> Meist 3 Monate vor Ablauf</p>
+                    <p><strong>Handy/Internet:</strong> Meist 60 Tage vor Ablauf</p>
+                    <p style="margin-top: 0.5rem;">Bei Umzug &gt;30km: Ausserordentliche Kündigung oft möglich.</p>
                 </div>
             </div>
 
@@ -484,6 +520,64 @@
                 article: 'Vertrag',
                 custom: true,
                 info: 'Geben Sie die vertraglich vereinbarte Kündigungsfrist ein.'
+            },
+            // Insurance contracts
+            'insurance_health_basic': {
+                name: 'Krankenkasse Grundversicherung',
+                article: 'KVG Art. 7',
+                fixedDate: { month: 10, day: 30 }, // November 30
+                term: 'year_end',
+                info: 'Grundversicherung: Kündigung muss bis 30. November beim Versicherer eingehen. Wechsel per 1. Januar.'
+            },
+            'insurance_health_extra': {
+                name: 'Krankenkasse Zusatzversicherung',
+                article: 'VVG Art. 35',
+                months: 3,
+                term: 'year_end',
+                info: 'Zusatzversicherung: Meist 3 Monate Kündigungsfrist auf Ende Jahr. Prüfen Sie Ihre Police!'
+            },
+            'insurance_property': {
+                name: 'Sach-/Autoversicherung',
+                article: 'VVG Art. 35',
+                months: 3,
+                term: 'policy_year',
+                info: 'Sachversicherungen: 3 Monate Kündigungsfrist auf Ende des Versicherungsjahres. Seit VVG 2022 immer kündbar nach 3 Jahren.'
+            },
+            'insurance_life': {
+                name: 'Lebensversicherung',
+                article: 'VVG Art. 35',
+                months: 3,
+                term: 'policy_year',
+                info: 'Lebensversicherung: 3 Monate Kündigungsfrist. Achtung: Rückkaufswert kann unter einbezahlten Prämien liegen.'
+            },
+            // Subscription contracts
+            'subscription_fitness': {
+                name: 'Fitness-Abo',
+                article: 'Vertrag/AGB',
+                months: 3,
+                term: 'contract_end',
+                info: 'Fitness-Abos: Meist 3 Monate vor Ablauf kündbar. Ohne Kündigung automatische Verlängerung. Ausserordentliche Kündigung bei Umzug >30km möglich.'
+            },
+            'subscription_mobile': {
+                name: 'Handy-Abo',
+                article: 'Vertrag/AGB',
+                days: 60,
+                term: 'contract_end',
+                info: 'Mobilfunk: Meist 60 Tage Kündigungsfrist. Ohne Kündigung automatische Verlängerung. Prüfen Sie Ihre AGB!'
+            },
+            'subscription_internet': {
+                name: 'Internet/TV-Abo',
+                article: 'Vertrag/AGB',
+                days: 60,
+                term: 'contract_end',
+                info: 'Internet/TV: Meist 60 Tage Kündigungsfrist vor Ablauf der Mindestvertragsdauer. Automatische Verlängerung üblich.'
+            },
+            'subscription_streaming': {
+                name: 'Streaming/Zeitschrift',
+                article: 'Vertrag/AGB',
+                months: 1,
+                term: 'month_end',
+                info: 'Streaming-Dienste: Meist monatlich kündbar. Zeitschriften: Oft 1 Monat auf Ende einer Aboperiode.'
             }
         };
 
@@ -497,7 +591,8 @@
 
             if (type) {
                 let periodText = '';
-                if (type.days) periodText = `${type.days} Tage`;
+                if (type.fixedDate) periodText = 'Feste Frist (30. November)';
+                else if (type.days) periodText = `${type.days} Tage`;
                 else if (type.weeks) periodText = `${type.weeks} Wochen`;
                 else if (type.months) periodText = `${type.months} Monat(e)`;
                 else if (type.custom) periodText = 'Individuell';
@@ -506,6 +601,9 @@
                 if (type.term === 'any') termText = 'jederzeit';
                 else if (type.term === 'month_end') termText = 'auf Monatsende';
                 else if (type.term === 'quarter_end') termText = 'auf Quartalsende';
+                else if (type.term === 'year_end') termText = 'auf Ende Jahr';
+                else if (type.term === 'policy_year') termText = 'auf Ende Versicherungsjahr';
+                else if (type.term === 'contract_end') termText = 'vor Vertragsablauf';
 
                 infoDiv.innerHTML = `
                     <h4>${type.name} – ${type.article}</h4>
@@ -582,8 +680,29 @@
             return new Date(year, targetMonth + 1, 0); // Last day of target month
         }
 
+        function getYearEnd(date) {
+            return new Date(date.getFullYear(), 11, 31); // December 31
+        }
+
+        function getNextYearEnd(date) {
+            const yearEnd = getYearEnd(date);
+            if (date <= yearEnd) return yearEnd;
+            return new Date(date.getFullYear() + 1, 11, 31);
+        }
+
         function getTerminationDate(noticeDate, type, customMonths, customTerm) {
             let minEndDate;
+
+            // Special case: fixed deadline (e.g., Krankenkasse Nov 30)
+            if (type.fixedDate) {
+                const thisYear = new Date(noticeDate.getFullYear(), type.fixedDate.month, type.fixedDate.day);
+                const nextYear = new Date(noticeDate.getFullYear() + 1, type.fixedDate.month, type.fixedDate.day);
+                // If we're past this year's deadline, return next year's year end
+                if (noticeDate > thisYear) {
+                    return new Date(noticeDate.getFullYear() + 1, 11, 31); // Next year Dec 31
+                }
+                return new Date(noticeDate.getFullYear(), 11, 31); // This year Dec 31
+            }
 
             // Calculate minimum end date based on notice period
             if (type.custom) {
@@ -613,6 +732,13 @@
                     endDate = getNextQuarterEnd(addMonths(endDate, 1));
                 }
                 return endDate;
+            } else if (term === 'year_end') {
+                // End of calendar year
+                return getNextYearEnd(minEndDate);
+            } else if (term === 'policy_year' || term === 'contract_end') {
+                // For policy year and contract end, we show based on notice period
+                // User should check their contract for exact date
+                return minEndDate;
             } else {
                 // No specific term - return minEndDate
                 return minEndDate;
@@ -644,7 +770,9 @@
 
             // Calculate notice period description
             let periodDesc = '';
-            if (type.custom) {
+            if (type.fixedDate) {
+                periodDesc = 'bis 30. November';
+            } else if (type.custom) {
                 periodDesc = `${customMonths} Monat(e)`;
             } else if (type.days) {
                 periodDesc = `${type.days} Tage`;
@@ -658,6 +786,9 @@
             let term = type.custom ? customTerm : type.term;
             if (term === 'month_end') termDesc = 'auf Monatsende';
             else if (term === 'quarter_end') termDesc = 'auf Quartalsende (ortsüblich)';
+            else if (term === 'year_end') termDesc = 'auf Ende Jahr';
+            else if (term === 'policy_year') termDesc = 'auf Ende Versicherungsjahr';
+            else if (term === 'contract_end') termDesc = 'vor Vertragsablauf';
             else termDesc = 'jederzeit';
 
             // Build result
@@ -708,6 +839,24 @@
                     <div class="warning" style="margin-top: 20px;">
                         <i class="fas fa-info-circle"></i>
                         <strong>Hinweis:</strong> Bei Wohnungsmiete muss die Kündigung auf dem amtlichen Formular erfolgen. Die Kündigung muss spätestens am letzten Tag vor Beginn der Kündigungsfrist beim Empfänger eingehen.
+                    </div>
+                `;
+            }
+
+            if (contractTypeValue.startsWith('insurance_')) {
+                resultHTML += `
+                    <div class="warning" style="margin-top: 20px;">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Hinweis:</strong> Die Kündigung muss beim Versicherer eingehen (nicht Poststempel). Prüfen Sie Ihre Police für das genaue Versicherungsjahr. Nach Schadenfall: Sonderkündigungsrecht innert 14 Tagen.
+                    </div>
+                `;
+            }
+
+            if (contractTypeValue.startsWith('subscription_')) {
+                resultHTML += `
+                    <div class="warning" style="margin-top: 20px;">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Hinweis:</strong> Die angegebenen Fristen sind branchenüblich. Prüfen Sie Ihre AGB für die genaue Frist! Ohne rechtzeitige Kündigung erfolgt meist automatische Verlängerung.
                     </div>
                 `;
             }
