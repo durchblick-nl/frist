@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <!-- Background circle with Durchblick blue -->
-  <circle cx="16" cy="16" r="15" fill="#1375bc"/>
+  <circle cx="16" cy="16" r="15" fill="#3f606f"/>
 
   <!-- Calendar base -->
   <rect x="7" y="9" width="18" height="16" rx="2" fill="white"/>
 
   <!-- Calendar header -->
-  <rect x="7" y="9" width="18" height="5" rx="2" fill="#0d5a91"/>
-  <rect x="7" y="12" width="18" height="2" fill="#0d5a91"/>
+  <rect x="7" y="9" width="18" height="5" rx="2" fill="#5a8a9d"/>
+  <rect x="7" y="12" width="18" height="2" fill="#5a8a9d"/>
 
   <!-- Calendar rings -->
-  <rect x="11" y="7" width="2" height="4" rx="1" fill="#0d5a91"/>
-  <rect x="19" y="7" width="2" height="4" rx="1" fill="#0d5a91"/>
+  <rect x="11" y="7" width="2" height="4" rx="1" fill="#5a8a9d"/>
+  <rect x="19" y="7" width="2" height="4" rx="1" fill="#5a8a9d"/>
 
   <!-- Checkmark (deadline met) -->
-  <path d="M11 18 L14 21 L21 14" stroke="#1375bc" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M11 18 L14 21 L21 14" stroke="#3f606f" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

@@ -1,17 +1,18 @@
         :root {
             /* Durchblick Brand Colors */
-            --primary-color: #1375bc;
-            --primary-dark: #0d5a91;
-            --secondary-color: #3f6576;
-            --accent-color: #bc3c31;
-            --text-color: #2d3748;
+            --primary-color: #3f606f;
+            --primary-dark: #2d4a56;
+            --secondary-color: #5a8a9d;
+            --accent-color: #cc5c53;
+            --text-color: #5a5a5a;
             --light-bg: #f8fafc;
-            --border-color: #e2e8f0;
+            --border-color: #dfe5e8;
             --success-color: #10b981;
             --warning-color: #f59e0b;
             --weekend-color: #fca5a5;
             --holiday-color: #fcd34d;
             --court-holiday-color: #93c5fd;
+            --footer-bg: #444;
         }
 
         * {
@@ -21,7 +22,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             line-height: 1.6;
             color: var(--text-color);
             background-color: var(--light-bg);
@@ -41,10 +42,15 @@
             margin-bottom: 2rem;
         }
 
+        h1, h2, h3, h4 {
+            font-family: 'Economica', Arial, sans-serif;
+        }
+
         h1 {
             color: var(--primary-color);
             margin-bottom: 1.5rem;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            font-weight: 700;
         }
 
         .steps {
@@ -635,19 +641,18 @@
             }
         }
 
-        .logo-container {
-            margin-bottom: 2rem;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            max-width: 200px;
-            height: auto;
+        .title-icon {
+            width: 48px;
+            height: 48px;
+            vertical-align: middle;
+            margin-right: 12px;
         }
 
         @media (max-width: 768px) {
-            .logo {
-                max-width: 150px;
+            .title-icon {
+                width: 36px;
+                height: 36px;
+                margin-right: 8px;
             }
         }
 
@@ -1055,6 +1060,38 @@
             }
         }
 
+        /* Mobile fix for modal - ensure button is accessible */
+        @media (max-width: 768px) {
+            .modal {
+                overflow-y: auto;
+                padding: 1rem;
+            }
+
+            .modal-content {
+                margin: 1rem auto;
+                padding: 1.5rem;
+                max-height: none;
+            }
+
+            .disclaimer-text {
+                margin-bottom: 1.5rem;
+            }
+
+            .disclaimer-text p {
+                margin-bottom: 0.75rem;
+                font-size: 0.95rem;
+            }
+
+            .disclaimer-text ul {
+                margin: 0.75rem 0;
+            }
+
+            .accept-button {
+                padding: 0.875rem;
+                font-size: 0.95rem;
+            }
+        }
+
         .steps-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1423,9 +1460,9 @@
         /* Header Row with Language Switcher */
         .header-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .language-switcher {
@@ -1434,14 +1471,15 @@
         }
 
         .lang-btn {
-            padding: 0.5rem 1rem;
+            padding: 6px 12px;
             border: 2px solid var(--primary-color);
             background: white;
             color: var(--primary-color);
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+            font: 600 14px/18px 'Economica', sans-serif;
+            text-decoration: none;
+            transition: all 0.2s;
         }
 
         .lang-btn:hover {
