@@ -862,10 +862,10 @@
 
             // Daten für PDF-Export speichern
             saveKuendigungData(
-                contractTypeEl.options[contractTypeEl.selectedIndex].text,
-                `${notice.period} ${notice.periodUnit === 'days' ? 'Tage' : 'Monate'} auf ${notice.termDate === 'any' ? 'jederzeit' : (notice.termDate === 'month_end' ? 'Monatsende' : 'Quartalsende')}`,
+                type.name,
+                `${periodDesc} ${termDesc}`,
                 noticeDate,
-                latestSendDate,
+                noticeDate, // latestNoticeDate = Zustelldatum
                 terminationDate
             );
         });

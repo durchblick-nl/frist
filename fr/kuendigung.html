@@ -832,10 +832,10 @@
 
             // Données pour export PDF
             saveKuendigungData(
-                contractTypeEl.options[contractTypeEl.selectedIndex].text,
-                `${notice.period} ${notice.periodUnit === 'days' ? 'jours' : 'mois'} pour ${notice.termDate === 'any' ? 'n\'importe quand' : (notice.termDate === 'month_end' ? 'fin de mois' : 'fin de trimestre')}`,
+                type.name,
+                `${periodDesc} ${termDesc}`,
                 noticeDate,
-                latestSendDate,
+                noticeDate, // latestNoticeDate = date de notification
                 terminationDate
             );
         });
