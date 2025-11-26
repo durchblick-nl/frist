@@ -194,6 +194,23 @@ frist/
 - Hébergé sur Cloudflare Pages
 - Open Source
 
+## Offline-Versionen | Versions hors ligne
+
+Jedes Tool ist auch als Offline-Version verfügbar – eine einzelne HTML-Datei, die ohne Internetverbindung funktioniert.
+
+Chaque outil est disponible en version hors ligne – un seul fichier HTML qui fonctionne sans connexion Internet.
+
+| Tool | DE | FR |
+|------|----|----|
+| Fristenrechner | [Download](https://frist.ch/downloads/fristenrechner-offline-de.zip) | [Télécharger](https://frist.ch/downloads/fristenrechner-offline-fr.zip) |
+| Verjährungsrechner | [Download](https://frist.ch/downloads/verjaehrungsrechner-offline-de.zip) | [Télécharger](https://frist.ch/downloads/verjaehrungsrechner-offline-fr.zip) |
+| Kündigungsfristenrechner | [Download](https://frist.ch/downloads/kuendigungsrechner-offline-de.zip) | [Télécharger](https://frist.ch/downloads/kuendigungsrechner-offline-fr.zip) |
+
+**Nutzung / Utilisation:**
+1. ZIP herunterladen / Télécharger le ZIP
+2. Entpacken / Dézipper
+3. HTML-Datei im Browser öffnen / Ouvrir le fichier HTML dans le navigateur
+
 ## Testprotokoll | Protocole de test
 
 Die Berechnungslogik wurde gegen alle gesetzlichen Vorgaben (Art. 142-146 ZPO) geprüft:

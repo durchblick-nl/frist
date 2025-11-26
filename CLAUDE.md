@@ -38,7 +38,22 @@ frist/
 ├── scripts/
 │   ├── calculations.js     # Core calculation functions (Fristenrechner)
 │   ├── app.js              # UI logic and form handling (Fristenrechner)
+│   ├── verjaehrung.js      # Statute of limitations logic (bilingual)
+│   ├── kuendigung.js       # Notice period logic (bilingual)
+│   ├── utils.js            # Shared utilities (dark mode, etc.)
 │   └── pdf-export.js       # PDF export functionality (jsPDF)
+├── downloads/              # Offline bundles (ZIP files)
+│   ├── fristenrechner-offline-de.zip
+│   ├── fristenrechner-offline-fr.zip
+│   ├── verjaehrungsrechner-offline-de.zip
+│   ├── verjaehrungsrechner-offline-fr.zip
+│   ├── kuendigungsrechner-offline-de.zip
+│   └── kuendigungsrechner-offline-fr.zip
+├── offline-bundle/         # Build tools for offline versions
+│   ├── build-all-offline.js  # Build script
+│   ├── economica-*.ttf     # Embedded fonts
+│   ├── flatpickr.min.*     # Date picker library
+│   └── jspdf.min.js        # PDF library
 ├── images/
 │   ├── og-frist-de.png     # OG image for German (1200x630)
 │   └── og-frist-fr.png     # OG image for French (1200x630)
@@ -63,6 +78,46 @@ node test.js
 
 # View visual tests
 open tests.html
+
+# Build offline bundles (all tools, DE + FR)
+cd offline-bundle && node build-all-offline.js
+```
+
+## Offline Bundles
+
+Each tool is available as a standalone HTML file that works without internet connection.
+
+### Building Offline Versions
+
+```bash
+cd offline-bundle
+node build-all-offline.js
+```
+
+This creates 6 ZIP files in `/downloads/`:
+- `fristenrechner-offline-de.zip` / `fristenrechner-offline-fr.zip`
+- `verjaehrungsrechner-offline-de.zip` / `verjaehrungsrechner-offline-fr.zip`
+- `kuendigungsrechner-offline-de.zip` / `kuendigungsrechner-offline-fr.zip`
+
+### What's Bundled
+
+Each offline HTML file contains:
+- All CSS (styles.css) inlined
+- All JavaScript (calculations, app logic) inlined
+- Economica font embedded as Base64
+- Flatpickr date picker library
+- jsPDF for PDF export
+- Font Awesome icons as Unicode/emoji fallbacks
+
+### Size
+
+~210 KB per ZIP file (compressed from ~680 KB HTML)
+
+### After Code Changes
+
+Run the build script to regenerate offline bundles:
+```bash
+cd offline-bundle && node build-all-offline.js
 ```
 
 ## Legal Calculation Rules
