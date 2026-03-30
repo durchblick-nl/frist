@@ -30,6 +30,55 @@ function isWeekend(date) {
     return date.getDay() === 0 || date.getDay() === 6;
 }
 
+function calculateEasterRelatedDate(year, daysFromEaster) {
+    const easter = calculateEasterDate(year);
+    const result = new Date(easter);
+    result.setDate(easter.getDate() + daysFromEaster);
+    const month = String(result.getMonth() + 1).padStart(2, '0');
+    const day = String(result.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function getHolidaysForYear(year, selectedHolidays) {
+    const holidays = [];
+    if (selectedHolidays.includes('all_national')) {
+        holidays.push(
+            `${year}-01-01`,
+            calculateEasterRelatedDate(year, 39),
+            `${year}-08-01`,
+            `${year}-12-25`
+        );
+    }
+    const cantonalHolidays = {
+        'berchtoldstag': `${year}-01-02`,
+        'dreikoenige': `${year}-01-06`,
+        'josephstag': `${year}-03-19`,
+        'karfreitag': calculateEasterRelatedDate(year, -2),
+        'ostermontag': calculateEasterRelatedDate(year, 1),
+        'tag_der_arbeit': `${year}-05-01`,
+        'pfingstmontag': calculateEasterRelatedDate(year, 50),
+        'fronleichnam': calculateEasterRelatedDate(year, 60),
+        'maria_himmelfahrt': `${year}-08-15`,
+        'allerheiligen': `${year}-11-01`,
+        'maria_empfaengnis': `${year}-12-08`,
+        'stephanstag': `${year}-12-26`
+    };
+    for (const [key, date] of Object.entries(cantonalHolidays)) {
+        if (selectedHolidays.includes(key)) holidays.push(date);
+    }
+    return holidays;
+}
+
+function isWeekendOrHoliday(date, selectedHolidays) {
+    if (date.getDay() === 0 || date.getDay() === 6) return true;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
+    const holidays = getHolidaysForYear(year, selectedHolidays);
+    return holidays.includes(dateString);
+}
+
 function isInCourtHolidays(date) {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -135,6 +184,44 @@ function calculateDeadline(startDate, fristType, days, months, useCourtHolidays 
     return endDate;
 }
 
+function calculateDeadlineWithHolidays(startDate, fristType, days, months, useCourtHolidays, selectedHolidays) {
+    let endDate;
+    let effectiveStartDate = new Date(startDate);
+
+    if (useCourtHolidays) {
+        const courtHolidayEnd = getCourtHolidayPeriodEnd(startDate);
+        if (courtHolidayEnd) effectiveStartDate = courtHolidayEnd;
+    }
+
+    if (fristType === 'months') {
+        const targetMonth = effectiveStartDate.getMonth() + months;
+        const targetYear = effectiveStartDate.getFullYear() + Math.floor(targetMonth / 12);
+        const normalizedTargetMonth = targetMonth % 12;
+        const lastDayOfTargetMonth = new Date(targetYear, normalizedTargetMonth + 1, 0).getDate();
+        const targetDay = Math.min(effectiveStartDate.getDate(), lastDayOfTargetMonth);
+        endDate = new Date(targetYear, normalizedTargetMonth, targetDay);
+    } else {
+        endDate = new Date(effectiveStartDate);
+        endDate.setDate(endDate.getDate() + days);
+    }
+
+    if (useCourtHolidays) {
+        let courtHolidayCount = 0;
+        let currentDate = new Date(effectiveStartDate);
+        while (currentDate <= endDate) {
+            if (isInCourtHolidays(currentDate)) courtHolidayCount++;
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        if (courtHolidayCount > 0) endDate.setDate(endDate.getDate() + courtHolidayCount);
+    }
+
+    while (isWeekendOrHoliday(endDate, selectedHolidays)) {
+        endDate.setDate(endDate.getDate() + 1);
+    }
+
+    return endDate;
+}
+
 // ============================================
 // TEST RUNNER
 // ============================================
@@ -204,6 +291,17 @@ test('10-Tage-Frist über Winterferien', '2025-12-15', 'days', 10, 0, true, '202
 console.log('\n--- Art. 146: Zustellung während Gerichtsferien ---');
 test('Zustellung am 20. Juli (Sommerferien)', '2025-07-20', 'days', 10, 0, true, '2025-08-26');
 test('Zustellung am 24. Dezember (Winterferien)', '2025-12-24', 'days', 10, 0, true, '2026-01-13');
+
+// Kantonale Feiertage (Art. 142 Abs. 3 + canton holidays)
+console.log('\n--- Kantonale Feiertage ---');
+// Regression: SG, 25.03.2026 + 10 Tage → Sa 04.04. → So 05.04. (Ostersonntag) → Mo 06.04. (Ostermontag SG) → Di 07.04.
+// Bug: toISOString() UTC-Fehler liess Ostermontag unerkannt (Thurnherr-Fall)
+const sgHolidays = ['karfreitag', 'ostermontag', 'pfingstmontag', 'allerheiligen', 'stephanstag'];
+const sgResult = calculateDeadlineWithHolidays(new Date(2026, 2, 25), 'days', 10, 0, false, sgHolidays);
+const sgExpected = new Date(2026, 3, 7);
+const sgPass = sgResult.toDateString() === sgExpected.toDateString();
+console.log(sgPass ? '✅ SG Ostermontag: 25.03.2026 + 10 Tage = 07.04.2026 (Di)' : `❌ SG Ostermontag: erwartet 07.04.2026, erhalten ${formatDate(sgResult)}`);
+if (sgPass) passed++; else failed++;
 
 // Osterberechnung
 console.log('\n--- Osterberechnung ---');

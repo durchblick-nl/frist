@@ -136,7 +136,9 @@ function isWeekendOrHoliday(date, selectedHolidays) {
     if (date.getDay() === 0 || date.getDay() === 6) return true;
 
     const year = date.getFullYear();
-    const dateString = date.toISOString().split('T')[0];
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
     const holidays = getHolidaysForYear(year, selectedHolidays);
 
     return holidays.includes(dateString);
