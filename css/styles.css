@@ -79,6 +79,60 @@
             color: var(--text-color);
         }
 
+        /* Flatpickr dark mode */
+        [data-theme="dark"] .flatpickr-calendar {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            color: var(--text-color);
+        }
+        [data-theme="dark"] .flatpickr-month,
+        [data-theme="dark"] .flatpickr-weekdays,
+        [data-theme="dark"] .flatpickr-current-month {
+            background: var(--input-bg);
+            color: var(--text-color);
+            fill: var(--text-color);
+        }
+        [data-theme="dark"] .flatpickr-weekday {
+            background: var(--input-bg);
+            color: var(--primary-color);
+        }
+        [data-theme="dark"] .flatpickr-day {
+            color: var(--text-color);
+        }
+        [data-theme="dark"] .flatpickr-day:hover {
+            background: var(--input-bg);
+            border-color: var(--primary-color);
+        }
+        [data-theme="dark"] .flatpickr-day.prevMonthDay,
+        [data-theme="dark"] .flatpickr-day.nextMonthDay {
+            color: var(--border-color);
+        }
+        [data-theme="dark"] .flatpickr-day.today {
+            border-color: var(--primary-color);
+        }
+        [data-theme="dark"] .flatpickr-day.selected,
+        [data-theme="dark"] .flatpickr-day.selected:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        [data-theme="dark"] .flatpickr-months .flatpickr-prev-month,
+        [data-theme="dark"] .flatpickr-months .flatpickr-next-month {
+            fill: var(--text-color);
+            color: var(--text-color);
+        }
+        [data-theme="dark"] .flatpickr-current-month select,
+        [data-theme="dark"] .flatpickr-current-month input.cur-year {
+            color: var(--text-color);
+            background: transparent;
+        }
+        [data-theme="dark"] span.arrowUp,
+        [data-theme="dark"] span.arrowDown {
+            border-bottom-color: var(--text-color);
+            border-top-color: var(--text-color);
+        }
+
         /* Dark mode toggle button */
         .dark-mode-toggle {
             background: transparent;
