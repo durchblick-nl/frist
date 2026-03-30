@@ -79,6 +79,12 @@
             color: var(--text-color);
         }
 
+        [data-theme="dark"] #startDate,
+        [data-theme="dark"] #startDate:focus {
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
         /* Flatpickr dark mode */
         [data-theme="dark"] .flatpickr-calendar {
             background: var(--card-bg);
