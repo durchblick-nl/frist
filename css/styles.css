@@ -414,7 +414,7 @@
         .dot.weekend { background-color: #ed8936; }
         .dot.holiday { background-color: #e53e3e; }
         .dot.court-holiday { background-color: #4299e1; }
-        .dot.last-day { background-color: var(--accent-color); }
+        .dot.last-day { background-color: #7b4ea0; }
         .dot.skipped { background-color: #718096; }
 
         .timeline {
@@ -749,9 +749,9 @@
         }
 
         .date-box.last-day {
-            background-color: var(--primary-color);
-            border: 2px solid var(--accent-color);
-            box-shadow: 0 0 10px rgba(229, 62, 62, 0.3);
+            background-color: #7b4ea0;
+            border: 2px solid #5a3575;
+            box-shadow: 0 0 10px rgba(123, 78, 160, 0.4);
         }
 
         .calendar-grid {
@@ -1040,9 +1040,9 @@
             }
 
             .date-box.last-day {
-                background-color: #1375bc !important;
+                background-color: #7b4ea0 !important;
                 color: white !important;
-                border: 2px solid #0d5a91;
+                border: 2px solid #5a3575;
                 font-weight: bold;
             }
 

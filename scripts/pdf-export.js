@@ -23,7 +23,7 @@ const FristPdfExport = {
         const accentColor = [204, 92, 83];
         const weekendColor = [245, 245, 245];
         const holidayColor = [255, 230, 230];
-        const lastDayColor = [63, 96, 111];
+        const lastDayColor = [123, 78, 160];
         const courtHolidayColor = [230, 240, 255];
 
         let y = 20;
@@ -93,7 +93,7 @@ const FristPdfExport = {
                 weekend: [237, 137, 54],     // #ed8936 - orange
                 holiday: [229, 62, 62],      // #e53e3e - rot
                 courtHoliday: [66, 153, 225], // #4299e1 - blau
-                lastDay: [63, 96, 111]       // #3f606f - Durchblick dunkelblau
+                lastDay: [123, 78, 160]      // #7b4ea0 - violett
             };
 
             // Kompakte Legende
