@@ -6,7 +6,7 @@
     <title>Fristenrechner - Testfälle</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 2rem; background: #f5f5f5; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 2rem; background: #f5f5f5; }
         h1 { margin-bottom: 1rem; color: #1375bc; }
         h2 { margin: 2rem 0 1rem; color: #3f6576; border-bottom: 2px solid #3f6576; padding-bottom: 0.5rem; }
         .summary { background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    <h1>🧪 Fristenrechner - Testfälle</h1>
+    <h1>Fristenrechner - Testfälle</h1>
 
     <div class="summary" id="summary">
         <div class="stats" id="stats">Tests werden geladen...</div>
@@ -38,311 +38,182 @@
 
     <div id="results"></div>
 
+    <script src="scripts/calculations.js?v=3"></script>
     <script>
-        // ============================================
-        // CALCULATION FUNCTIONS (from index.html)
-        // ============================================
+        const tests = [];
 
-        function calculateEasterDate(year) {
-            const a = year % 19;
-            const b = Math.floor(year / 100);
-            const c = year % 100;
-            const d = Math.floor(b / 4);
-            const e = b % 4;
-            const f = Math.floor((b + 8) / 25);
-            const g = Math.floor((b - f + 1) / 3);
-            const h = (19 * a + b - d - g + 15) % 30;
-            const i = Math.floor(c / 4);
-            const k = c % 4;
-            const l = (32 + 2 * e + 2 * i - h - k) % 7;
-            const m = Math.floor((a + 11 * h + 22 * l) / 451);
-            const month = Math.floor((h + l - 7 * m + 114) / 31);
-            const day = ((h + l - 7 * m + 114) % 31) + 1;
+        function date(year, month, day) {
             return new Date(year, month - 1, day);
         }
 
-        function isWeekend(date) {
-            return date.getDay() === 0 || date.getDay() === 6;
+        function formatDate(value) {
+            return [
+                value.getFullYear(),
+                String(value.getMonth() + 1).padStart(2, '0'),
+                String(value.getDate()).padStart(2, '0')
+            ].join('-');
         }
 
-        function isInCourtHolidays(date, checkEnabled = true) {
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            const day = date.getDate();
-
-            // Easter holidays
-            const easter = calculateEasterDate(year);
-            const easterStart = new Date(easter);
-            easterStart.setDate(easter.getDate() - 7);
-            const easterEnd = new Date(easter);
-            easterEnd.setDate(easter.getDate() + 7);
-            if (date >= easterStart && date <= easterEnd) return true;
-
-            // Summer holidays (15 July - 15 August)
-            if ((month === 6 && day >= 15) || (month === 7 && day <= 15)) return true;
-
-            // Winter holidays (18 December - 2 January)
-            if ((month === 11 && day >= 18) || (month === 0 && day <= 2)) return true;
-
-            return false;
-        }
-
-        function getCourtHolidayPeriodEnd(date) {
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            const day = date.getDate();
-
-            // Easter
-            const easter = calculateEasterDate(year);
-            const easterStart = new Date(easter);
-            easterStart.setDate(easter.getDate() - 7);
-            const easterEnd = new Date(easter);
-            easterEnd.setDate(easter.getDate() + 7);
-            if (date >= easterStart && date <= easterEnd) {
-                const nextDay = new Date(easterEnd);
-                nextDay.setDate(nextDay.getDate() + 1);
-                return nextDay;
-            }
-
-            // Summer (15 July - 15 August)
-            const summerStart = new Date(year, 6, 15);
-            const summerEnd = new Date(year, 7, 15);
-            if (date >= summerStart && date <= summerEnd) {
-                return new Date(year, 7, 16);
-            }
-
-            // Winter (18 December - 2 January)
-            const winterStart = new Date(year, 11, 18);
-            if (date >= winterStart) {
-                return new Date(year + 1, 0, 3);
-            }
-            if (month === 0 && day <= 2) {
-                return new Date(year, 0, 3);
-            }
-
-            return null;
-        }
-
-        // Simplified deadline calculation for testing
-        function calculateDeadline(startDate, fristType, days, months, useCourtHolidays = false) {
-            let endDate;
-            let effectiveStartDate = new Date(startDate);
-
-            // Art. 146: Notification during court holidays
-            if (useCourtHolidays) {
-                const courtHolidayEnd = getCourtHolidayPeriodEnd(startDate);
-                if (courtHolidayEnd) {
-                    effectiveStartDate = courtHolidayEnd;
-                }
-            }
-
-            if (fristType === 'months') {
-                // Month deadline: starts on day of notification (BGer 5A_691/2023)
-                const targetMonth = effectiveStartDate.getMonth() + months;
-                const targetYear = effectiveStartDate.getFullYear() + Math.floor(targetMonth / 12);
-                const normalizedTargetMonth = targetMonth % 12;
-                const lastDayOfTargetMonth = new Date(targetYear, normalizedTargetMonth + 1, 0).getDate();
-                const targetDay = Math.min(effectiveStartDate.getDate(), lastDayOfTargetMonth);
-                endDate = new Date(targetYear, normalizedTargetMonth, targetDay);
-            } else {
-                // Day deadline: starts day AFTER notification (Art. 142 Abs. 1)
-                endDate = new Date(effectiveStartDate);
-                endDate.setDate(endDate.getDate() + days);
-            }
-
-            // Art. 145: Court holidays suspension
-            if (useCourtHolidays) {
-                let courtHolidayCount = 0;
-                let currentDate = new Date(effectiveStartDate);
-                while (currentDate <= endDate) {
-                    if (isInCourtHolidays(currentDate)) {
-                        courtHolidayCount++;
-                    }
-                    currentDate.setDate(currentDate.getDate() + 1);
-                }
-                if (courtHolidayCount > 0) {
-                    endDate.setDate(endDate.getDate() + courtHolidayCount);
-                }
-            }
-
-            // Art. 142 Abs. 3: Weekend adjustment
-            while (isWeekend(endDate)) {
-                endDate.setDate(endDate.getDate() + 1);
-            }
-
-            return endDate;
-        }
-
-        // ============================================
-        // TEST FRAMEWORK
-        // ============================================
-
-        const tests = [];
-        let passed = 0;
-        let failed = 0;
-
-        function formatDate(date) {
-            return date.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        }
-
-        function addTest(category, name, lawRef, inputDate, fristType, days, months, useCourtHolidays, expectedDate, notes = '') {
-            tests.push({ category, name, lawRef, inputDate, fristType, days, months, useCourtHolidays, expectedDate, notes });
+        function addTest(group, name, lawRef, inputDate, fristType, options, expectedDate, explanation) {
+            tests.push({
+                group,
+                name,
+                lawRef,
+                inputDate,
+                fristType,
+                options: options || {},
+                expectedDate,
+                explanation
+            });
         }
 
         function runTest(test) {
-            const startDate = new Date(test.inputDate);
-            const expected = new Date(test.expectedDate);
-            const actual = calculateDeadline(startDate, test.fristType, test.days, test.months, test.useCourtHolidays);
-
-            const pass = actual.toDateString() === expected.toDateString();
-            if (pass) passed++; else failed++;
+            const actual = calculateDeadline(
+                test.inputDate,
+                test.fristType,
+                test.options.customValue || null,
+                Boolean(test.options.courtHolidays),
+                test.options.holidays || [],
+                Boolean(test.options.weekendDelivery)
+            );
+            const pass = actual.toDateString() === test.expectedDate.toDateString();
 
             return {
                 ...test,
                 actual,
-                expected,
                 pass
             };
         }
 
-        function renderResults() {
-            const resultsDiv = document.getElementById('results');
-            const summaryDiv = document.getElementById('summary');
-            const statsDiv = document.getElementById('stats');
+        function renderResults(results) {
+            const container = document.getElementById('results');
+            const summary = document.getElementById('summary');
+            const stats = document.getElementById('stats');
+            const passed = results.filter(result => result.pass).length;
+            const failed = results.length - passed;
 
-            // Group by category
-            const categories = {};
-            tests.forEach(test => {
-                const result = runTest(test);
-                if (!categories[test.category]) categories[test.category] = [];
-                categories[test.category].push(result);
-            });
+            stats.textContent = `${passed} von ${results.length} Tests bestanden${failed ? `, ${failed} fehlgeschlagen` : ''}`;
+            summary.className = `summary ${failed ? 'has-fail' : 'all-pass'}`;
+            container.innerHTML = '';
 
-            // Summary
-            statsDiv.innerHTML = `<strong>${passed}</strong> bestanden, <strong>${failed}</strong> fehlgeschlagen von <strong>${tests.length}</strong> Tests`;
-            summaryDiv.className = 'summary ' + (failed === 0 ? 'all-pass' : 'has-fail');
-
-            // Render categories
-            let html = '';
-            for (const [category, results] of Object.entries(categories)) {
-                html += `<h2>${category}</h2>`;
-                for (const result of results) {
-                    html += `
-                        <div class="test ${result.pass ? 'pass' : 'fail'}">
-                            <div class="test-icon">${result.pass ? '✅' : '❌'}</div>
-                            <div class="test-info">
-                                <div class="test-name">${result.name}</div>
-                                <div class="test-detail">
-                                    Zustellung: ${formatDate(new Date(result.inputDate))} →
-                                    ${result.fristType === 'months' ? result.months + ' Monat(e)' : result.days + ' Tage'}
-                                    ${result.useCourtHolidays ? ' (mit Gerichtsferien)' : ''}
-                                    ${result.notes ? ' — ' + result.notes : ''}
-                                </div>
-                            </div>
-                            <div class="test-result">
-                                <span class="expected">Erwartet: ${formatDate(result.expected)}</span>
-                                ${!result.pass ? `<br><span class="actual">Erhalten: ${formatDate(result.actual)}</span>` : ''}
-                            </div>
-                            <div class="law-ref">${result.lawRef}</div>
-                        </div>
-                    `;
+            let currentGroup = '';
+            results.forEach(result => {
+                if (result.group !== currentGroup) {
+                    currentGroup = result.group;
+                    const heading = document.createElement('h2');
+                    heading.textContent = currentGroup;
+                    container.appendChild(heading);
                 }
-            }
-            resultsDiv.innerHTML = html;
+
+                const testElement = document.createElement('div');
+                testElement.className = `test ${result.pass ? 'pass' : 'fail'}`;
+                testElement.innerHTML = `
+                    <div class="test-icon">${result.pass ? 'OK' : 'FAIL'}</div>
+                    <div class="test-info">
+                        <div class="test-name">${result.name} <span class="law-ref">${result.lawRef}</span></div>
+                        <div class="test-detail">${result.explanation}</div>
+                    </div>
+                    <div class="test-result">
+                        <div class="expected">Soll: ${formatDate(result.expectedDate)}</div>
+                        ${result.pass ? '' : `<div class="actual">Ist: ${formatDate(result.actual)}</div>`}
+                    </div>
+                `;
+                container.appendChild(testElement);
+            });
         }
 
         function runAllTests() {
-            passed = 0;
-            failed = 0;
-            renderResults();
+            renderResults(tests.map(runTest));
         }
 
-        // ============================================
-        // TEST CASES
-        // ============================================
+        addTest(
+            'Art. 142 Abs. 1 - Tagesfristen',
+            '10-Tage-Frist beginnt am Folgetag',
+            'Art. 142 Abs. 1 ZPO',
+            date(2025, 1, 6),
+            'days_10',
+            {},
+            date(2025, 1, 16),
+            '06.01. + 10 Tage = 16.01.'
+        );
 
-        // === Art. 142 Abs. 1: Tagesfristen ===
-        addTest('Art. 142 Abs. 1 – Tagesfristen',
-            '10-Tage-Frist (Montag → Donnerstag)', 'Art. 142 Abs. 1 ZPO',
-            '2025-01-06', 'days', 10, 0, false, '2025-01-16',
-            'Mo 6.1. + 10 Tage = Do 16.1.');
+        addTest(
+            'Art. 142 Abs. 1bis - Gewoehnliche Post',
+            'Samstagszustellung gilt am Montag als erfolgt',
+            'Art. 142 Abs. 1bis ZPO',
+            date(2025, 1, 18),
+            'days_10',
+            { weekendDelivery: true },
+            date(2025, 1, 30),
+            '18.01. ist Samstag, effektive Zustellung 20.01., Fristende 30.01.'
+        );
 
-        addTest('Art. 142 Abs. 1 – Tagesfristen',
-            '20-Tage-Frist (Rekursfrist)', 'Art. 142 Abs. 1 ZPO',
-            '2025-01-06', 'days', 20, 0, false, '2025-01-27',
-            'Mo 6.1. + 20 Tage = So 26.1. → Mo 27.1.');
+        addTest(
+            'Art. 142 Abs. 2 - Monatsfristen',
+            'Monatsfrist endet am gleichen Tag im Zielmonat',
+            'Art. 142 Abs. 2 ZPO',
+            date(2025, 1, 15),
+            'months_1',
+            {},
+            date(2025, 2, 17),
+            '15.02. ist Samstag, daher Montag 17.02.'
+        );
 
-        addTest('Art. 142 Abs. 1 – Tagesfristen',
-            '30-Tage-Frist (Beschwerdefrist)', 'Art. 142 Abs. 1 ZPO',
-            '2025-01-06', 'days', 30, 0, false, '2025-02-05',
-            'Mo 6.1. + 30 Tage = Mi 5.2.');
+        addTest(
+            'Art. 142 Abs. 3 - Feiertage',
+            'Kantonaler Feiertag am Fristende verschiebt auf Werktag',
+            'Art. 142 Abs. 3 ZPO',
+            date(2026, 3, 25),
+            'days_10',
+            { holidays: ['karfreitag', 'ostermontag', 'pfingstmontag', 'allerheiligen', 'stephanstag'] },
+            date(2026, 4, 7),
+            'Fristende faellt auf Samstag/Ostern/Ostermontag, daher Dienstag 07.04.'
+        );
 
-        // === Art. 142 Abs. 2: Monatsfristen ===
-        addTest('Art. 142 Abs. 2 – Monatsfristen (BGer 5A_691/2023)',
-            '1-Monats-Frist (Standard)', 'Art. 142 Abs. 2 ZPO',
-            '2025-01-15', 'months', 0, 1, false, '2025-02-17',
-            '15.1. + 1 Monat = 15.2. (Sa) → Mo 17.2.');
+        addTest(
+            'Art. 145 - Gerichtsferien',
+            'Tagesfrist zaehlt vor Sommerferien und nach Ferienende weiter',
+            'Art. 145 Abs. 1 lit. b ZPO',
+            date(2025, 7, 11),
+            'days_10',
+            { courtHolidays: true },
+            date(2025, 8, 22),
+            '3 Tage laufen vor dem 15.07., 7 Tage laufen ab 16.08.'
+        );
 
-        addTest('Art. 142 Abs. 2 – Monatsfristen (BGer 5A_691/2023)',
-            '1-Monats-Frist vom 31. (Monatsende)', 'Art. 142 Abs. 2 ZPO',
-            '2025-01-31', 'months', 0, 1, false, '2025-02-28',
-            '31.1. + 1 Monat = 28.2. (kein 31. Feb)');
+        addTest(
+            'Art. 145 - Gerichtsferien',
+            'Monatsfrist wird um Osterstillstand verlaengert',
+            'Art. 145 Abs. 1 lit. a ZPO',
+            date(2022, 1, 26),
+            'months_3',
+            { courtHolidays: true },
+            date(2022, 5, 11),
+            '26.01. + 3 Monate = 26.04., plus 15 Tage Osterstillstand = 11.05.'
+        );
 
-        addTest('Art. 142 Abs. 2 – Monatsfristen (BGer 5A_691/2023)',
-            '1-Monats-Frist vom 31. (Schaltjahr)', 'Art. 142 Abs. 2 ZPO',
-            '2024-01-31', 'months', 0, 1, false, '2024-02-29',
-            '31.1.2024 + 1 Monat = 29.2.2024 (Schaltjahr)');
+        addTest(
+            'Art. 146 - Zustellung waehrend Gerichtsferien',
+            'Tagesfrist laeuft ab erstem Tag nach Sommerferien',
+            'Art. 146 ZPO',
+            date(2025, 7, 20),
+            'days_10',
+            { courtHolidays: true },
+            date(2025, 8, 25),
+            'Fristlauf beginnt am 16.08.; wegen Wochenende endet die Frist am 25.08.'
+        );
 
-        addTest('Art. 142 Abs. 2 – Monatsfristen (BGer 5A_691/2023)',
-            '3-Monats-Frist', 'Art. 142 Abs. 2 ZPO',
-            '2025-01-15', 'months', 0, 3, false, '2025-04-15',
-            '15.1. + 3 Monate = 15.4.');
+        addTest(
+            'Art. 146 - Zustellung waehrend Gerichtsferien',
+            'Monatsfrist richtet sich nach erstem Tag nach Ferienende',
+            'Art. 146 ZPO',
+            date(2025, 7, 20),
+            'months_1',
+            { courtHolidays: true },
+            date(2025, 9, 16),
+            'Fristlauf beginnt am 16.08.; ein Monat endet am 16.09.'
+        );
 
-        addTest('Art. 142 Abs. 2 – Monatsfristen (BGer 5A_691/2023)',
-            '1-Monats-Frist Jahreswechsel', 'Art. 142 Abs. 2 ZPO',
-            '2025-12-15', 'months', 0, 1, false, '2026-01-15',
-            '15.12.2025 + 1 Monat = 15.1.2026');
-
-        // === Art. 142 Abs. 3: Wochenende ===
-        addTest('Art. 142 Abs. 3 – Wochenende/Feiertag',
-            'Fristende am Samstag → Montag', 'Art. 142 Abs. 3 ZPO',
-            '2025-01-08', 'days', 10, 0, false, '2025-01-20',
-            'Mi 8.1. + 10 Tage = Sa 18.1. → Mo 20.1.');
-
-        addTest('Art. 142 Abs. 3 – Wochenende/Feiertag',
-            'Fristende am Sonntag → Montag', 'Art. 142 Abs. 3 ZPO',
-            '2025-01-09', 'days', 10, 0, false, '2025-01-20',
-            'Do 9.1. + 10 Tage = So 19.1. → Mo 20.1.');
-
-        // === Art. 145: Gerichtsferien ===
-        addTest('Art. 145 Abs. 1 – Sommerferien',
-            '10-Tage-Frist über Sommerferien', 'Art. 145 Abs. 1 lit. b ZPO',
-            '2025-07-10', 'days', 10, 0, true, '2025-07-28',
-            '10.7. + 10 = 20.7., +6 Ferientage = 26.7. (Sa) → 28.7. (Mo)');
-
-        addTest('Art. 145 Abs. 1 – Winterferien',
-            '10-Tage-Frist über Winterferien', 'Art. 145 Abs. 1 lit. c ZPO',
-            '2025-12-15', 'days', 10, 0, true, '2026-01-02',
-            '15.12. + 10 = 25.12., +8 Ferientage (18.-25.12.) = 2.1.');
-
-        // === Art. 146: Zustellung während Gerichtsferien ===
-        addTest('Art. 146 – Zustellung in Sommerferien',
-            'Zustellung am 20. Juli (Sommerferien)', 'Art. 146 ZPO',
-            '2025-07-20', 'days', 10, 0, true, '2025-08-26',
-            'Zustellung 20.7. → Frist beginnt 16.8. + 10 Tage = 26.8.');
-
-        addTest('Art. 146 – Zustellung in Winterferien',
-            'Zustellung am 24. Dezember (Winterferien)', 'Art. 146 ZPO',
-            '2025-12-24', 'days', 10, 0, true, '2026-01-13',
-            'Zustellung 24.12. → Frist beginnt 3.1. + 10 Tage = 13.1.');
-
-        // === Osterberechnung ===
-        addTest('Osterberechnung',
-            'Ostern 2025 korrekt berechnet', 'Gaußsche Formel',
-            '2025-04-13', 'days', 10, 0, true, '2025-05-01',
-            'Ostern 2025 = 20.4., Osterferien 13.4.-27.4.');
-
-        // Run tests on load
         document.addEventListener('DOMContentLoaded', runAllTests);
     </script>
 </body>

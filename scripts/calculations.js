@@ -92,6 +92,12 @@ function getCourtHolidayPeriodEnd(date) {
     return null;
 }
 
+function addDaysToDate(date, days) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
 // Get holidays for a specific year
 function getHolidaysForYear(year, selectedHolidays) {
     const holidays = [];
@@ -153,10 +159,69 @@ function adjustDeliveryDate(date, selectedHolidays) {
     return adjusted;
 }
 
+function countCourtHolidayDays(startDate, endDate) {
+    let count = 0;
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+        if (isInCourtHolidays(currentDate)) {
+            count++;
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return count;
+}
+
+// Art. 145 ZPO for month deadlines:
+// First calculate the nominal month end under Art. 142 Abs. 2, then add every
+// calendar day on which the deadline stood still. The scan is iterative because
+// the added days can themselves reach another court-holiday day, e.g. a period
+// ending during or immediately before the summer holidays.
+function addCourtHolidaySuspension(endDate, effectiveStartDate) {
+    let adjustedEndDate = new Date(endDate);
+    let scanStartDate = new Date(effectiveStartDate);
+
+    while (scanStartDate <= adjustedEndDate) {
+        const courtHolidayCount = countCourtHolidayDays(scanStartDate, adjustedEndDate);
+        if (courtHolidayCount === 0) {
+            break;
+        }
+
+        scanStartDate = addDaysToDate(adjustedEndDate, 1);
+        adjustedEndDate.setDate(adjustedEndDate.getDate() + courtHolidayCount);
+    }
+
+    return adjustedEndDate;
+}
+
+// Art. 145 ZPO for day deadlines:
+// Days are counted only while the deadline is running. Weekends still count
+// during the running period; Art. 142 Abs. 3 is applied only to the final day.
+function calculateDayDeadline(effectiveStartDate, days, useCourtHolidays, startsDuringCourtHolidays) {
+    // If Art. 146 applies, the first day after the court holidays is already
+    // the first running day. Starting one day earlier makes that day count.
+    let currentDate = startsDuringCourtHolidays
+        ? addDaysToDate(effectiveStartDate, -1)
+        : new Date(effectiveStartDate);
+    let remainingDays = days;
+
+    while (remainingDays > 0) {
+        currentDate.setDate(currentDate.getDate() + 1);
+
+        if (!useCourtHolidays || !isInCourtHolidays(currentDate)) {
+            remainingDays--;
+        }
+    }
+
+    return currentDate;
+}
+
 // Main deadline calculation function
 function calculateDeadline(startDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDeliveryRule = false) {
     let endDate;
     let effectiveStartDate = new Date(startDate);
+    let startsDuringCourtHolidays = false;
 
     // Art. 142 Abs. 1bis ZPO: Weekend/holiday delivery by ordinary post
     // Delivery on Sa/So/holiday counts as delivered on next business day
@@ -164,11 +229,15 @@ function calculateDeadline(startDate, fristType, customValue, useCourtHolidays, 
         effectiveStartDate = adjustDeliveryDate(effectiveStartDate, selectedHolidays);
     }
 
-    // Art. 146 ZPO: Notification during court holidays
+    // Art. 146 ZPO: notification during court holidays.
+    // Use the effective delivery date after Art. 142 Abs. 1bis, because an
+    // ordinary-post weekend/holiday delivery can move the legal notification
+    // into a court-holiday period.
     if (useCourtHolidays) {
-        const courtHolidayEnd = getCourtHolidayPeriodEnd(startDate);
+        const courtHolidayEnd = getCourtHolidayPeriodEnd(effectiveStartDate);
         if (courtHolidayEnd) {
             effectiveStartDate = courtHolidayEnd;
+            startsDuringCourtHolidays = true;
         }
     }
 
@@ -182,26 +251,16 @@ function calculateDeadline(startDate, fristType, customValue, useCourtHolidays, 
         const lastDayOfTargetMonth = new Date(targetYear, normalizedTargetMonth + 1, 0).getDate();
         const targetDay = Math.min(effectiveStartDate.getDate(), lastDayOfTargetMonth);
         endDate = new Date(targetYear, normalizedTargetMonth, targetDay);
+
+        // Art. 145 ZPO: Court holidays suspension for month deadlines.
+        // Add suspended calendar days, including newly overlapped holiday days.
+        if (useCourtHolidays) {
+            endDate = addCourtHolidaySuspension(endDate, effectiveStartDate);
+        }
     } else {
         // Day deadline: starts day AFTER notification (Art. 142 Abs. 1 ZPO)
-        endDate = new Date(effectiveStartDate);
         const days = customValue || parseInt(fristType.split('_')[1]);
-        endDate.setDate(endDate.getDate() + days);
-    }
-
-    // Art. 145 ZPO: Court holidays suspension
-    if (useCourtHolidays) {
-        let courtHolidayCount = 0;
-        let currentDate = new Date(effectiveStartDate);
-        while (currentDate <= endDate) {
-            if (isInCourtHolidays(currentDate)) {
-                courtHolidayCount++;
-            }
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-        if (courtHolidayCount > 0) {
-            endDate.setDate(endDate.getDate() + courtHolidayCount);
-        }
+        endDate = calculateDayDeadline(effectiveStartDate, days, useCourtHolidays, startsDuringCourtHolidays);
     }
 
     // Art. 142 Abs. 3: Weekend/holiday adjustment

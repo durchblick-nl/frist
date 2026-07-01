@@ -34,7 +34,8 @@ const cantonHolidays = {
     'VD': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag'],
     'VS': ['josephstag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis'],
     'ZG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'ZH': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag']
+    // ZH: Berchtoldstag is not a cantonal statutory holiday; leave it manual.
+    'ZH': ['karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag']
 };
 
 // Kanton aus URL oder localStorage laden
