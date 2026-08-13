@@ -5,7 +5,7 @@
     <!-- German version -->
     <url>
         <loc>https://frist.ch/de/</loc>
-        <lastmod>2025-11-23</lastmod>
+        <lastmod>2026-08-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
         <xhtml:link rel="alternate" hreflang="de" href="https://frist.ch/de/"/>
@@ -15,7 +15,7 @@
     <!-- French version -->
     <url>
         <loc>https://frist.ch/fr/</loc>
-        <lastmod>2025-11-23</lastmod>
+        <lastmod>2026-08-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
         <xhtml:link rel="alternate" hreflang="de" href="https://frist.ch/de/"/>
@@ -25,7 +25,7 @@
     <!-- German Verjährungsrechner -->
     <url>
         <loc>https://frist.ch/de/verjaehrung.html</loc>
-        <lastmod>2025-11-23</lastmod>
+        <lastmod>2026-08-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
         <xhtml:link rel="alternate" hreflang="de" href="https://frist.ch/de/verjaehrung.html"/>
@@ -35,7 +35,7 @@
     <!-- French Verjährungsrechner -->
     <url>
         <loc>https://frist.ch/fr/verjaehrung.html</loc>
-        <lastmod>2025-11-23</lastmod>
+        <lastmod>2026-08-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
         <xhtml:link rel="alternate" hreflang="de" href="https://frist.ch/de/verjaehrung.html"/>
@@ -45,7 +45,7 @@
     <!-- German Kündigungsfristenrechner -->
     <url>
         <loc>https://frist.ch/de/kuendigung.html</loc>
-        <lastmod>2025-11-23</lastmod>
+        <lastmod>2026-08-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
         <xhtml:link rel="alternate" hreflang="de" href="https://frist.ch/de/kuendigung.html"/>
@@ -55,7 +55,7 @@
     <!-- French Kündigungsfristenrechner -->
     <url>
         <loc>https://frist.ch/fr/kuendigung.html</loc>
-        <lastmod>2025-11-23</lastmod>
+        <lastmod>2026-08-13</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
         <xhtml:link rel="alternate" hreflang="de" href="https://frist.ch/de/kuendigung.html"/>
