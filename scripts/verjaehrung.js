@@ -107,11 +107,11 @@ const CLAIM_TYPES = {
     },
     'judgment_10': {
         years: 10,
-        name: { de: 'Gerichtsurteile', fr: 'Jugements' },
-        article: 'OR Art. 137',
+        name: { de: 'Durch Urkunde oder Urteil festgestellte Forderung', fr: 'Créance constatée par titre ou jugement' },
+        article: 'OR Art. 137 Abs. 2',
         info: {
-            de: 'Rechtskräftige Urteile und gerichtliche Vergleiche verjähren nach 10 Jahren.',
-            fr: 'Les jugements entrés en force et les transactions judiciaires se prescrivent par 10 ans.'
+            de: 'Nach einer Unterbrechung beträgt die neue Frist 10 Jahre, wenn die Forderung durch Ausstellung einer Urkunde anerkannt oder durch Urteil festgestellt wurde. Als Beginn ist der gesetzliche Neubeginn einzugeben.',
+            fr: 'Après une interruption, le nouveau délai est de 10 ans si la créance est reconnue par l’établissement d’un titre ou constatée par jugement. Indiquez comme début la date légale du nouveau départ.'
         }
     },
     // 5 years (OR Art. 128)
@@ -223,11 +223,22 @@ const CLAIM_TYPES = {
         years: 3,
         absoluteYears: 20,
         hasAbsolute: true,
-        name: { de: 'Personenschäden', fr: 'Lésions corporelles' },
-        article: 'OR Art. 60 (seit 2020)',
+        name: { de: 'Personenschäden aus unerlaubter Handlung', fr: 'Lésions corporelles résultant d’un acte illicite' },
+        article: 'OR Art. 60 Abs. 1bis',
         info: {
-            de: '3 Jahre ab Kenntnis, max. 20 Jahre ab schädigendem Ereignis. Gilt seit 1.1.2020.',
-            fr: '3 ans dès la connaissance, max. 20 ans dès l\'événement dommageable. Applicable depuis le 1.1.2020.'
+            de: 'Bei Körperverletzung oder Tötung: 3 Jahre ab Kenntnis von Schaden und Ersatzpflichtigem, höchstens 20 Jahre ab dem schädigenden Verhalten oder dessen Ende.',
+            fr: 'En cas de lésions corporelles ou de décès: 3 ans dès la connaissance du dommage et du responsable, au plus 20 ans dès le comportement dommageable ou sa cessation.'
+        }
+    },
+    'contract_injury_3': {
+        years: 3,
+        absoluteYears: 20,
+        hasAbsolute: true,
+        name: { de: 'Vertragliche Personenschäden', fr: 'Lésions corporelles résultant d’un contrat' },
+        article: 'OR Art. 128a',
+        info: {
+            de: 'Schadenersatz oder Genugtuung wegen vertragswidriger Körperverletzung oder Tötung: 3 Jahre ab Kenntnis des Schadens, höchstens 20 Jahre ab dem schädigenden Verhalten oder dessen Ende.',
+            fr: 'Dommages-intérêts ou tort moral pour lésions corporelles ou décès en violation du contrat: 3 ans dès la connaissance du dommage, au plus 20 ans dès le comportement dommageable ou sa cessation.'
         }
     },
     // 2 years (OR Art. 210/371)
@@ -255,18 +266,29 @@ const CLAIM_TYPES = {
         name: { de: 'Transportschäden', fr: 'Dommages de transport' },
         article: 'OR Art. 454',
         info: {
-            de: 'Ersatzklagen gegen den Frachtführer: bei Untergang, Verlust oder Verspätung ab dem vorgesehenen Ablieferungstag; bei Beschädigung ab Übergabe an den Adressaten.',
-            fr: 'Actions en dommages-intérêts contre le voiturier: dès le jour prévu pour la livraison en cas de destruction, perte ou retard; dès la remise au destinataire en cas d’avarie.'
+            de: 'Ersatzklagen gegen den Frachtführer: bei Untergang, Verlust oder Verspätung ab dem vorgesehenen Ablieferungstag; bei Beschädigung ab Übergabe an den Adressaten. Arglist und grobe Fahrlässigkeit bleiben vorbehalten.',
+            fr: 'Actions en dommages-intérêts contre le voiturier: dès le jour prévu pour la livraison en cas de destruction, perte ou retard; dès la remise au destinataire en cas d’avarie. Les cas de dol et de faute grave sont réservés.'
         }
     },
     // Special cases
     'loss_certificate_20': {
         years: 20,
-        name: { de: 'Verlustscheine', fr: 'Actes de défaut de biens' },
+        name: { de: 'Verlustschein gegen den Schuldner', fr: 'Acte de défaut de biens contre le débiteur' },
         article: { de: 'SchKG Art. 149a', fr: 'LP art. 149a' },
         info: {
-            de: 'Forderungen aus Verlustscheinen verjähren 20 Jahre nach Ausstellung; gegenüber Erben spätestens ein Jahr nach Eröffnung des Erbgangs.',
-            fr: 'Les créances constatées par acte de défaut de biens se prescrivent 20 ans après l’acte; envers les héritiers, au plus tard un an après l’ouverture de la succession.'
+            de: 'Gegenüber dem Schuldner verjährt die Verlustscheinforderung 20 Jahre nach Ausstellung des Verlustscheins.',
+            fr: 'Contre le débiteur, la créance constatée par l’acte de défaut de biens se prescrit 20 ans après la délivrance de l’acte.'
+        }
+    },
+    'loss_certificate_heirs_1': {
+        years: 1,
+        absoluteYears: 20,
+        hasAbsolute: true,
+        name: { de: 'Verlustschein gegen Erben', fr: 'Acte de défaut de biens contre les héritiers' },
+        article: { de: 'SchKG Art. 149a Abs. 1', fr: 'LP art. 149a al. 1' },
+        info: {
+            de: 'Gegenüber den Erben verjährt die Forderung spätestens ein Jahr nach Eröffnung des Erbgangs und spätestens 20 Jahre nach Ausstellung des Verlustscheins. Als relativen Beginn den Erbgang, als absoluten Ausgangspunkt die Ausstellung eingeben.',
+            fr: 'Contre les héritiers, la créance se prescrit au plus tard un an après l’ouverture de la succession et au plus tard 20 ans après la délivrance de l’acte. Indiquez la succession comme début relatif et la délivrance comme point de départ absolu.'
         }
     },
     'culture_30': {
@@ -276,8 +298,8 @@ const CLAIM_TYPES = {
         name: { de: 'Kulturgüter', fr: 'Biens culturels' },
         article: 'OR Art. 210 Abs. 3',
         info: {
-            de: '1 Jahr ab Kenntnis, max. 30 Jahre ab Erwerb. Für rechtswidrig entzogene Kulturgüter.',
-            fr: '1 an dès connaissance, max. 30 ans dès acquisition. Pour biens culturels illicitement soustraits.'
+            de: 'Gewährleistung wegen Mängeln eines Kulturguts: 1 Jahr ab Entdeckung des Mangels, höchstens 30 Jahre ab Vertragsabschluss.',
+            fr: 'Garantie pour les défauts d’un bien culturel: 1 an dès la découverte du défaut, au plus 30 ans dès la conclusion du contrat.'
         }
     },
     'regress_3': {

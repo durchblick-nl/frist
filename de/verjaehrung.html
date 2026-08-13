@@ -200,7 +200,7 @@
                         <optgroup label="10 Jahre (OR Art. 127)">
                             <option value="general_10">Allgemeine Forderungen (z.B. Darlehen, Kaufpreis)</option>
                             <option value="contract_10">Vertragliche Ansprüche (allgemein)</option>
-                            <option value="judgment_10">Gerichtsurteile und Vergleiche</option>
+                            <option value="judgment_10">Durch Urkunde oder Urteil festgestellte Forderung</option>
                         </optgroup>
                         <optgroup label="5 Jahre (OR Art. 128)">
                             <option value="rent_5">Miet- und Pachtzinsen</option>
@@ -216,7 +216,8 @@
                         <optgroup label="3 Jahre (OR Art. 60/67)">
                             <option value="tort_3">Schadenersatz aus unerlaubter Handlung</option>
                             <option value="enrichment_3">Ungerechtfertigte Bereicherung</option>
-                            <option value="injury_3">Personenschäden (seit 1.1.2020)</option>
+                            <option value="injury_3">Personenschäden aus unerlaubter Handlung (OR Art. 60 Abs. 1bis)</option>
+                            <option value="contract_injury_3">Vertragliche Personenschäden (OR Art. 128a)</option>
                         </optgroup>
                         <optgroup label="2 Jahre (OR Art. 210/371)">
                             <option value="sale_2">Kaufvertrag: Mängelansprüche bewegliche Sachen</option>
@@ -226,7 +227,8 @@
                             <option value="transport_1">Transportschäden (OR Art. 454)</option>
                         </optgroup>
                         <optgroup label="Spezialfälle">
-                            <option value="loss_certificate_20">Verlustscheine (20 Jahre)</option>
+                            <option value="loss_certificate_20">Verlustschein gegen Schuldner (20 Jahre)</option>
+                            <option value="loss_certificate_heirs_1">Verlustschein gegen Erben (max. 1 Jahr)</option>
                             <option value="culture_30">Kulturgüter (1 + 30 Jahre)</option>
                             <option value="regress_3">Regress bei Solidarhaftung (3 Jahre)</option>
                             <option value="insurance_5">Versicherungsansprüche (5 Jahre, seit 2022)</option>
@@ -252,10 +254,10 @@
                 </div>
 
                 <div class="form-group" id="absoluteDateGroup" style="display: none;">
-                    <label for="absoluteDate" class="required">Datum des schädigenden Ereignisses (absolute Frist)
+                    <label for="absoluteDate" class="required">Ausgangspunkt der absoluten Frist
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">Neben der relativen Frist (ab Kenntnis) gilt eine absolute Frist ab dem schädigenden Ereignis.</span>
+                            <span class="tooltip-content">Bei Schadenersatz ist das schädigende Verhalten oder dessen Ende massgebend, bei Kulturgütern der Vertragsabschluss und beim Verlustschein gegen Erben dessen Ausstellung. Beachten Sie den Hinweis zur gewählten Anspruchsart.</span>
                         </span>
                     </label>
                     <input type="text"
@@ -330,9 +332,9 @@
                     <ul>
                         <li><strong>10 Jahre:</strong> Allgemeine Forderungen (OR Art. 127)</li>
                         <li><strong>5 Jahre:</strong> Periodische Leistungen wie Miete, Lohn (OR Art. 128)</li>
-                        <li><strong>3 Jahre:</strong> Schadenersatz, ungerechtfertigte Bereicherung (OR Art. 60/67)</li>
-                        <li><strong>2 Jahre:</strong> Mängelrüge beim Kauf (OR Art. 210)</li>
-                        <li><strong>1 Jahr:</strong> Ansprüche aus Frachtvertrag; besondere relative Frist für rechtswidrig entzogene Kulturgüter</li>
+                        <li><strong>3 Jahre relativ:</strong> Schadenersatz, Personenschäden und ungerechtfertigte Bereicherung (OR Art. 60, 67 und 128a)</li>
+                        <li><strong>2 Jahre:</strong> Gewährleistungsansprüche wegen Kaufmängeln (OR Art. 210)</li>
+                        <li><strong>1 Jahr:</strong> Ersatzklagen gegen Frachtführer; relative Frist bei Mängeln von Kulturgütern; Höchstfrist gegen Erben bei Verlustscheinen</li>
                         <li><strong>5 Jahre:</strong> Versicherungsansprüche nach VVG Art. 46</li>
                     </ul>
                 </div>
@@ -347,7 +349,7 @@
                     <p>Die Verjährung wird unterbrochen durch (OR Art. 135):</p>
                     <ul>
                         <li>Schuldanerkennung (inkl. Zins- oder Abschlagszahlung)</li>
-                        <li>Betreibung oder Konkursbegehren</li>
+                        <li>Betreibung oder Eingabe im Konkurs</li>
                         <li>Klage oder Schlichtungsgesuch</li>
                         <li>Einrede im Prozess</li>
                     </ul>
@@ -379,8 +381,8 @@
                 </div>
                 <div class="step-content">
                     <h3>Wichtige Hinweise</h3>
-                    <p><strong>Relative vs. absolute Frist:</strong> Bei Schadenersatz gilt neben der relativen Frist (ab Kenntnis) eine absolute Frist ab dem schädigenden Ereignis.</p>
-                    <p style="margin-top: 0.5rem;"><strong>Seit 1.1.2020:</strong> Personenschäden verjähren nach 3 Jahren (relativ) / 20 Jahren (absolut).</p>
+                    <p><strong>Relative vs. absolute Frist:</strong> Der Ausgangspunkt hängt von der Anspruchsart ab. Massgebend sind insbesondere Kenntnis und schädigendes Verhalten, bei Kulturgütern Entdeckung und Vertragsabschluss sowie bei Verlustscheinen Erbgang und Ausstellung.</p>
+                    <p style="margin-top: 0.5rem;"><strong>Personenschäden:</strong> Nach geltendem Recht gelten bei deliktischen und vertraglichen Personenschäden 3 Jahre relativ und 20 Jahre absolut; der Kenntnisbegriff ist nicht identisch (OR Art. 60 Abs. 1bis und Art. 128a).</p>
                 </div>
             </div>
         </div>
@@ -419,8 +421,18 @@
                 <div class="law-content">
                     <ol>
                         <li>Der Anspruch auf Schadenersatz oder Genugtuung verjährt mit Ablauf von drei Jahren von dem Tage an gerechnet, an welchem der Geschädigte Kenntnis vom Schaden und von der Person des Ersatzpflichtigen erlangt hat, jedenfalls aber mit Ablauf von zehn Jahren, vom Tage an gerechnet, an welchem das schädigende Verhalten erfolgte oder aufhörte.</li>
+                        <li><strong>Abs. 1bis:</strong> Bei Tötung eines Menschen oder bei Körperverletzung gilt dieselbe relative Dreijahresfrist, jedoch eine absolute Frist von zwanzig Jahren.</li>
                         <li>Hat die ersatzpflichtige Person durch ihr schädigendes Verhalten eine strafbare Handlung begangen, so verjährt der Anspruch auf Schadenersatz oder Genugtuung frühestens mit Eintritt der strafrechtlichen Verfolgungsverjährung.</li>
                     </ol>
+                </div>
+            </div>
+
+            <div class="law-card">
+                <div class="law-header">
+                    <h3><a href="https://www.fedlex.admin.ch/eli/cc/27/317_321_377/de#art_128_a" target="_blank" rel="noopener">Art. 128a OR – Vertragliche Personenschäden <i class="fas fa-external-link-alt"></i></a></h3>
+                </div>
+                <div class="law-content">
+                    <p>Ansprüche wegen vertragswidriger Körperverletzung oder Tötung verjähren drei Jahre ab Kenntnis des Schadens, spätestens aber zwanzig Jahre nach dem schädigenden Verhalten oder dessen Ende.</p>
                 </div>
             </div>
 

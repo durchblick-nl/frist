@@ -21,6 +21,10 @@ Primary source: [Swiss Civil Procedure Code, arts. 142-146](https://www.fedlex.a
 - Court holidays apply to ordinary and simplified proceedings. Art. 145 para. 2
   excludes only conciliation and summary proceedings. This point was explicitly
   rechecked because older summaries sometimes also exclude simplified cases.
+- Since 1 January 2025, art. 145 para. 4 CPC applies CPC court holidays to all
+  DEBA actions filed in court, but not to complaints before the supervisory
+  authority. The former general reservation in favour of DEBA holidays must not
+  be restored.
 - Calendar and PDF day counters omit suspended days and do not invent an extra
   deadline day when the final date moves under art. 142 para. 3 CPC.
 
@@ -38,6 +42,15 @@ Primary sources:
 - Dates are strict calendar dates. Leap-day anniversaries are clamped to the
   last valid day of February.
 - For claims with relative and absolute periods, both source dates are required.
+- Personal injury is split by legal basis: tort claims use art. 60 para. 1bis CO
+  and contractual claims use art. 128a CO. Both have a three-year relative and
+  twenty-year absolute period, but contractual claims require knowledge only of
+  the damage, not of the liable person.
+- Under art. 210 para. 3 CO, the one-year period for defects in cultural property
+  starts on discovery and the thirty-year maximum starts at contract conclusion.
+- DEBA art. 149a is represented by separate choices: twenty years from issue of
+  the loss certificate against the debtor, and at most one year from opening of
+  the succession against heirs. The earlier expiry always controls.
 - An interruption restarts prescription under arts. 137-138 CO. The entered
   restart date must be the legally relevant date: recognition, the latest debt
   enforcement act, completion of the relevant court instance, or the date on
@@ -64,8 +77,10 @@ Primary sources:
   customary or insurance-year end and checks whether notice was received in time.
 - VVG art. 35a permits ordinary termination at the end of the third or a later
   insurance year with three months' notice; an earlier contractual right remains
-  possible. Life insurance instead follows VVG art. 89 and can be terminated by
-  the policyholder after one year.
+  possible. The entered end date is validated as the day before the corresponding
+  anniversary of the first insurance year stated in the policy. Life insurance
+  instead follows VVG art. 89 and can be terminated by the policyholder after one
+  year.
 - Basic insurance normally changes on 1 January after receipt by 30 November.
   A 1 July change with receipt by 31 March is limited to the standard model with
   free choice of doctor and the ordinary CHF 300 deductible. Weekend cutoffs are

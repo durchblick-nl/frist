@@ -200,7 +200,7 @@
                         <optgroup label="10 ans (CO art. 127)">
                             <option value="general_10">Créances générales (p.ex. prêt, prix d'achat)</option>
                             <option value="contract_10">Créances contractuelles (général)</option>
-                            <option value="judgment_10">Jugements et transactions judiciaires</option>
+                            <option value="judgment_10">Créance constatée par titre ou jugement</option>
                         </optgroup>
                         <optgroup label="5 ans (CO art. 128)">
                             <option value="rent_5">Loyers et fermages</option>
@@ -216,7 +216,8 @@
                         <optgroup label="3 ans (CO art. 60/67)">
                             <option value="tort_3">Dommages-intérêts (acte illicite)</option>
                             <option value="enrichment_3">Enrichissement illégitime</option>
-                            <option value="injury_3">Lésions corporelles (depuis 1.1.2020)</option>
+                            <option value="injury_3">Lésions corporelles résultant d’un acte illicite (CO art. 60 al. 1bis)</option>
+                            <option value="contract_injury_3">Lésions corporelles résultant d’un contrat (CO art. 128a)</option>
                         </optgroup>
                         <optgroup label="2 ans (CO art. 210/371)">
                             <option value="sale_2">Contrat de vente: défauts de la chose</option>
@@ -226,7 +227,8 @@
                             <option value="transport_1">Dommages de transport (CO art. 454)</option>
                         </optgroup>
                         <optgroup label="Cas spéciaux">
-                            <option value="loss_certificate_20">Actes de défaut de biens (20 ans)</option>
+                            <option value="loss_certificate_20">Acte de défaut de biens contre le débiteur (20 ans)</option>
+                            <option value="loss_certificate_heirs_1">Acte de défaut de biens contre les héritiers (max. 1 an)</option>
                             <option value="culture_30">Biens culturels (1 + 30 ans)</option>
                             <option value="regress_3">Recours solidarité (3 ans)</option>
                             <option value="insurance_5">Créances d'assurance (5 ans, depuis 2022)</option>
@@ -252,10 +254,10 @@
                 </div>
 
                 <div class="form-group" id="absoluteDateGroup" style="display: none;">
-                    <label for="absoluteDate" class="required">Date de l'événement dommageable (délai absolu)
+                    <label for="absoluteDate" class="required">Point de départ du délai absolu
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">En plus du délai relatif (dès la connaissance), un délai absolu s'applique dès l'événement dommageable.</span>
+                            <span class="tooltip-content">Pour les dommages-intérêts, le comportement dommageable ou sa cessation est déterminant, pour les biens culturels la conclusion du contrat et pour l’acte contre les héritiers sa délivrance. Consultez l’indication relative au type de créance choisi.</span>
                         </span>
                     </label>
                     <input type="text"
@@ -330,9 +332,9 @@
                     <ul>
                         <li><strong>10 ans:</strong> Créances générales (CO art. 127)</li>
                         <li><strong>5 ans:</strong> Prestations périodiques comme loyer, salaire (CO art. 128)</li>
-                        <li><strong>3 ans:</strong> Dommages-intérêts, enrichissement illégitime (CO art. 60/67)</li>
+                        <li><strong>3 ans relatifs:</strong> Dommages-intérêts, lésions corporelles et enrichissement illégitime (CO art. 60, 67 et 128a)</li>
                         <li><strong>2 ans:</strong> Garantie pour défauts à l'achat (CO art. 210)</li>
-                        <li><strong>1 an:</strong> Créances du contrat de transport; délai relatif spécial pour les biens culturels illicitement soustraits</li>
+                        <li><strong>1 an:</strong> Actions contre le voiturier; délai relatif pour les défauts de biens culturels; délai maximal contre les héritiers pour les actes de défaut de biens</li>
                         <li><strong>5 ans:</strong> Créances d'assurance selon l'art. 46 LCA</li>
                     </ul>
                 </div>
@@ -347,7 +349,7 @@
                     <p>La prescription est interrompue par (CO art. 135):</p>
                     <ul>
                         <li>Reconnaissance de dette (y c. paiement d'intérêts ou acomptes)</li>
-                        <li>Poursuite ou réquisition de faillite</li>
+                        <li>Poursuite ou production dans la faillite</li>
                         <li>Action en justice ou requête de conciliation</li>
                         <li>Exception soulevée en procès</li>
                     </ul>
@@ -379,8 +381,8 @@
                 </div>
                 <div class="step-content">
                     <h3>Remarques importantes</h3>
-                    <p><strong>Délai relatif vs absolu:</strong> Pour les dommages-intérêts, outre le délai relatif (dès la connaissance), un délai absolu s'applique dès l'événement dommageable.</p>
-                    <p style="margin-top: 0.5rem;"><strong>Depuis le 1.1.2020:</strong> Les lésions corporelles se prescrivent par 3 ans (relatif) / 20 ans (absolu).</p>
+                    <p><strong>Délai relatif vs absolu:</strong> Le point de départ dépend du type de créance. Sont notamment déterminants la connaissance et le comportement dommageable, la découverte et la conclusion du contrat pour les biens culturels, ainsi que la succession et la délivrance pour les actes de défaut de biens.</p>
+                    <p style="margin-top: 0.5rem;"><strong>Lésions corporelles:</strong> Le droit en vigueur prévoit 3 ans relativement et 20 ans absolument pour les lésions délictuelles et contractuelles; la connaissance requise n’est pas identique (CO art. 60 al. 1bis et art. 128a).</p>
                 </div>
             </div>
         </div>
@@ -406,7 +408,7 @@
                     <p>Se prescrivent par cinq ans:</p>
                     <ol>
                         <li>les loyers et fermages, les intérêts de capitaux et toutes autres redevances périodiques;</li>
-                        <li>les actions pour fournitures de vivres, pour dépenses d'auberge et pour fournitures de détaillants;</li>
+                        <li>les actions pour fournitures de vivres, pension alimentaire et dépenses d'auberge;</li>
                         <li>les actions des artisans, pour leur travail; des marchands en détail, pour leurs fournitures; des médecins et autres gens de l'art, pour leurs soins; des avocats, procureurs, agents de droit et notaires, pour leurs services professionnels; ainsi que celles des travailleurs, pour leurs services.</li>
                     </ol>
                 </div>
@@ -419,8 +421,18 @@
                 <div class="law-content">
                     <ol>
                         <li>L'action en dommages-intérêts ou en paiement d'une somme d'argent à titre de réparation morale se prescrit par trois ans à compter du jour où la partie lésée a eu connaissance du dommage ainsi que de la personne tenue à réparation et, dans tous les cas, par dix ans à compter du jour où le fait dommageable s'est produit ou a cessé.</li>
+                        <li><strong>Al. 1bis:</strong> En cas de décès ou de lésions corporelles, le délai relatif est également de trois ans, mais le délai absolu est de vingt ans.</li>
                         <li>Si l'acte dommageable constitue une infraction pénale, l'action civile ne se prescrit pas avant l'action pénale.</li>
                     </ol>
+                </div>
+            </div>
+
+            <div class="law-card">
+                <div class="law-header">
+                    <h3><a href="https://www.fedlex.admin.ch/eli/cc/27/317_321_377/fr#art_128_a" target="_blank" rel="noopener">Art. 128a CO – Lésions corporelles contractuelles <i class="fas fa-external-link-alt"></i></a></h3>
+                </div>
+                <div class="law-content">
+                    <p>Les créances résultant de lésions corporelles ou d’un décès en violation du contrat se prescrivent par trois ans dès la connaissance du dommage, mais au plus tard par vingt ans dès le comportement dommageable ou sa cessation.</p>
                 </div>
             </div>
 

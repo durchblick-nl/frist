@@ -397,6 +397,22 @@ function subtractNoticePeriod(targetDate, type, customMonths) {
 }
 
 /**
+ * VVG art. 35a permits termination only at the end of the third or a later
+ * insurance year. An insurance year beginning on 1 June therefore ends on
+ * 31 May, not on the anniversary itself.
+ */
+function isPermittedInsuranceYearEnd(contractStartDate, targetEndDate, minimumYears) {
+    if (!contractStartDate || !targetEndDate) return false;
+
+    for (let year = minimumYears; year <= minimumYears + 200; year++) {
+        const yearEnd = addDays(addYears(contractStartDate, year), -1);
+        if (yearEnd.getTime() === targetEndDate.getTime()) return true;
+        if (yearEnd > targetEndDate) return false;
+    }
+    return false;
+}
+
+/**
  * Pure termination calculation. Contractual and locally customary end dates
  * are explicit inputs because they cannot be derived safely from a notice date.
  */
@@ -436,7 +452,7 @@ function calculateTermination(noticeDate, type, options = {}) {
     const term = type.custom ? customTerm : type.term;
     if (term === 'target_date') {
         if (!targetEndDate) return null;
-        if (type.minimumContractYears && (!contractStartDate || targetEndDate < addYears(contractStartDate, type.minimumContractYears))) {
+        if (type.minimumContractYears && !isPermittedInsuranceYearEnd(contractStartDate, targetEndDate, type.minimumContractYears)) {
             return { invalidContractYear: true };
         }
         const latestNoticeDate = subtractNoticePeriod(targetEndDate, type, customMonths);

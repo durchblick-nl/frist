@@ -234,6 +234,13 @@ console.log('\n=== VERJAEHRUNGSRECHNER TESTS ===\n');
 const prescription = loadBrowserScript('scripts/verjaehrung.js');
 assertEqual('Ungueltiges Kalenderdatum wird abgewiesen', prescription("parseDate('31.02.2025')"), null);
 assertEqual('Schalttag wird auf Monatsende geklemmt', formatDate(prescription("addYears(new Date(2024, 1, 29), 10)")), '2034-02-28');
+assertEqual('Deliktischer Personenschaden verwendet Art. 60 Abs. 1bis', prescription("CLAIM_TYPES.injury_3.article"), 'OR Art. 60 Abs. 1bis');
+assertEqual('Vertraglicher Personenschaden verwendet Art. 128a', prescription("CLAIM_TYPES.contract_injury_3.article"), 'OR Art. 128a');
+assertEqual('Vertraglicher Personenschaden hat eine absolute Frist von 20 Jahren', prescription("CLAIM_TYPES.contract_injury_3.absoluteYears"), 20);
+assertEqual('Kulturgut-Hinweis nennt den gesetzlichen Vertragsabschluss', prescription("CLAIM_TYPES.culture_30.info.de.includes('Vertragsabschluss')"), true);
+assertEqual('Verlustschein gegen Schuldner hat 20 Jahre', prescription("CLAIM_TYPES.loss_certificate_20.years"), 20);
+assertEqual('Verlustschein gegen Erben hat hoechstens 1 Jahr', prescription("CLAIM_TYPES.loss_certificate_heirs_1.years"), 1);
+assertEqual('Verlustschein gegen Erben wahrt auch die 20-Jahresgrenze', prescription("CLAIM_TYPES.loss_certificate_heirs_1.absoluteYears"), 20);
 assertEqual(
     'Ordentliche Unterbrechung startet relative und absolute Frist neu',
     formatDate(prescription("calculatePrescription(CLAIM_TYPES.tort_3, new Date(2020,0,1), new Date(2019,0,1), 'ordinary', new Date(2025,5,1)).absoluteExpiration")),
@@ -254,9 +261,19 @@ assertEqual(
     '2025-02-28'
 );
 assertEqual(
-    'Versicherungsende wird aus Eingabe geprueft und nicht erfunden',
-    termination("calculateTermination(new Date(2026,10,13), CONTRACT_TYPES.insurance_property, {contractStartDate:new Date(2023,11,31), targetEndDate:new Date(2026,11,31)}).timely"),
+    'Drittes Versicherungsjahr endet am Tag vor dem dritten Jahrestag',
+    termination("isPermittedInsuranceYearEnd(new Date(2023,5,1), new Date(2026,4,31), 3)"),
+    true
+);
+assertEqual(
+    'Jahrestag selbst ist kein Versicherungsjahresende',
+    termination("isPermittedInsuranceYearEnd(new Date(2023,5,1), new Date(2026,5,1), 3)"),
     false
+);
+assertEqual(
+    'Versicherungsfrist wird vom gueltigen Jahresende zurueckgerechnet',
+    formatDate(termination("calculateTermination(new Date(2026,1,28), CONTRACT_TYPES.insurance_property, {contractStartDate:new Date(2023,5,1), targetEndDate:new Date(2026,4,31)}).latestNoticeDate")),
+    '2026-02-28'
 );
 assertEqual(
     'Lebensversicherung ist nach einem Jahr kuendbar',
