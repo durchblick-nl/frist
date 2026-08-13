@@ -15,6 +15,36 @@ vm.runInContext(
     context
 );
 
+function loadBrowserScript(filename, lang = 'de') {
+    const elements = new Map();
+    const document = {
+        documentElement: { lang },
+        addEventListener() {},
+        getElementById(id) {
+            if (!elements.has(id)) {
+                elements.set(id, {
+                    value: '', checked: false, required: false, style: {},
+                    addEventListener() {}, querySelector() { return null; },
+                    scrollIntoView() {}
+                });
+            }
+            return elements.get(id);
+        },
+        querySelector() { return { innerHTML: '' }; }
+    };
+    const sandbox = {
+        console,
+        document,
+        window: { print() {} },
+        localStorage: { getItem() { return 'true'; }, setItem() {} },
+        alert() {}
+    };
+    sandbox.window.window = sandbox.window;
+    vm.createContext(sandbox);
+    vm.runInContext(fs.readFileSync(path.join(__dirname, filename), 'utf8'), sandbox);
+    return expression => vm.runInContext(expression, sandbox);
+}
+
 let passed = 0;
 let failed = 0;
 
@@ -166,6 +196,83 @@ assertDate(
 console.log('\n--- Osterberechnung ---');
 assertEqual('Ostern 2025 = 20. April', formatDate(context.calculateEasterDate(2025)), '2025-04-20');
 assertEqual('Ostern 2024 = 31. Maerz', formatDate(context.calculateEasterDate(2024)), '2024-03-31');
+
+console.log('\n--- Kalenderzaehler ---');
+assertEqual(
+    'Gerichtsferientag erhaelt keine laufende Tagesnummer',
+    context.getDeadlineTimelineCount(date(2025, 7, 15), date(2025, 7, 11), 'days_10', null, true, []),
+    null
+);
+assertEqual(
+    'Erster Tag nach Zustellung in Gerichtsferien ist Tag 1',
+    context.getDeadlineTimelineCount(date(2025, 8, 16), date(2025, 7, 20), 'days_10', null, true, []),
+    1
+);
+assertEqual(
+    'Verschobener Schluss-Werktag erzeugt keinen zusaetzlichen Fristtag',
+    context.getDeadlineTimelineCount(date(2025, 1, 27), date(2025, 1, 6), 'days_20', null, false, []),
+    null
+);
+assertEqual(
+    'Monatsfristen zeigen keinen Tageszaehler',
+    context.getDeadlineTimelineCount(date(2025, 2, 1), date(2025, 1, 1), 'months_1', null, false, []),
+    null
+);
+const timedStart = new Date(2026, 7, 13, 8, 5);
+assertDate(
+    'Uhrzeit im Eingabedatum beeinflusst den Kalendertag nicht',
+    calculate(timedStart, 'days_10', { courtHolidays: true }),
+    date(2026, 8, 25)
+);
+assertEqual(
+    'Fristende mit Uhrzeit wird im Kalender als Tag 10 markiert',
+    context.getDeadlineTimelineCount(date(2026, 8, 25), timedStart, 'days_10', null, true, []),
+    10
+);
+
+console.log('\n=== VERJAEHRUNGSRECHNER TESTS ===\n');
+const prescription = loadBrowserScript('scripts/verjaehrung.js');
+assertEqual('Ungueltiges Kalenderdatum wird abgewiesen', prescription("parseDate('31.02.2025')"), null);
+assertEqual('Schalttag wird auf Monatsende geklemmt', formatDate(prescription("addYears(new Date(2024, 1, 29), 10)")), '2034-02-28');
+assertEqual(
+    'Ordentliche Unterbrechung startet relative und absolute Frist neu',
+    formatDate(prescription("calculatePrescription(CLAIM_TYPES.tort_3, new Date(2020,0,1), new Date(2019,0,1), 'ordinary', new Date(2025,5,1)).absoluteExpiration")),
+    '2035-06-01'
+);
+assertEqual(
+    'Urkunde oder Urteil fuehrt zu neuer Zehnjahresfrist',
+    formatDate(prescription("calculatePrescription(CLAIM_TYPES.tort_3, new Date(2020,0,1), new Date(2019,0,1), 'document_or_judgment', new Date(2025,5,1)).relevantExpiration")),
+    '2035-06-01'
+);
+
+console.log('\n=== KUENDIGUNGSRECHNER TESTS ===\n');
+const termination = loadBrowserScript('scripts/kuendigung.js');
+assertEqual('Ungueltiges Kuendigungsdatum wird abgewiesen', termination("parseDate('31.02.2025')"), null);
+assertEqual(
+    'Arbeitskuendigung am 31. Januar endet nach einem Monat Ende Februar',
+    formatDate(termination("calculateTermination(new Date(2025,0,31), CONTRACT_TYPES.work_year1).terminationDate")),
+    '2025-02-28'
+);
+assertEqual(
+    'Versicherungsende wird aus Eingabe geprueft und nicht erfunden',
+    termination("calculateTermination(new Date(2026,10,13), CONTRACT_TYPES.insurance_property, {contractStartDate:new Date(2023,11,31), targetEndDate:new Date(2026,11,31)}).timely"),
+    false
+);
+assertEqual(
+    'Lebensversicherung ist nach einem Jahr kuendbar',
+    termination("calculateTermination(new Date(2026,7,13), CONTRACT_TYPES.insurance_life, {contractStartDate:new Date(2025,7,13)}).timely"),
+    true
+);
+assertEqual(
+    'Grundversicherung nach Novemberfrist wechselt erst im Folgejahr',
+    formatDate(termination("calculateTermination(new Date(2026,11,1), CONTRACT_TYPES.insurance_health_basic).terminationDate")),
+    '2027-12-31'
+);
+assertEqual(
+    'Individuelle Quartalsfrist weist den spaetesten Zugang rueckwaerts aus',
+    formatDate(termination("calculateTermination(new Date(2026,0,15), CONTRACT_TYPES.custom, {customMonths:3, customTerm:'quarter_end'}).latestNoticeDate")),
+    '2026-03-30'
+);
 
 console.log('\n=== ERGEBNIS ===');
 console.log(`${passed} bestanden, ${failed} fehlgeschlagen`);

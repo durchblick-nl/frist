@@ -150,7 +150,7 @@ Wird während Gerichtsferien zugestellt → Frist beginnt am ersten Tag **nach**
 | 3 Jahre | Schadenersatz (Delikt) | OR Art. 60 (relativ) |
 | 3 Jahre | Ungerechtfertigte Bereicherung | OR Art. 67 |
 | 2 Jahre | Kaufvertrag (Gewährleistung) | OR Art. 210 |
-| 20 Jahre | Verlustscheine | OR Art. 149a |
+| 20 Jahre | Verlustscheine | SchKG Art. 149a |
 
 **Relative vs. absolute Verjährung**: Bei Delikten gilt 3 Jahre relativ / 10 Jahre absolut; bei Personenschäden 3 Jahre relativ / 20 Jahre absolut (seit 2020).
 
@@ -167,16 +167,17 @@ Wird während Gerichtsferien zugestellt → Frist beginnt am ersten Tag **nach**
 #### Mietvertrag (OR Art. 266)
 | Objekt | Frist | Termin |
 |--------|-------|--------|
-| Wohnung | 3 Monate | Quartalsende (ortsüblich) |
-| Geschäftsräume | 6 Monate | Quartalsende |
-| Möbliertes Zimmer | 2 Wochen | Monatsende |
+| Wohnung | 3 Monate | ortsüblicher Termin; sonst Ende einer dreimonatigen Mietdauer |
+| Geschäftsräume | 6 Monate | ortsüblicher Termin; sonst Ende einer dreimonatigen Mietdauer |
+| Möbliertes Zimmer / separater Parkplatz | 2 Wochen | Ende einer einmonatigen Mietdauer |
 
 #### Versicherungen (VVG/KVG)
 | Versicherung | Frist | Termin |
 |--------------|-------|--------|
 | Krankenkasse Grund | bis 30. November | 31. Dezember |
-| Zusatzversicherung | 3 Monate | Ende Jahr |
-| Sachversicherung | 3 Monate | Ende Versicherungsjahr |
+| Zusatzversicherung | 3 Monate | Ende des dritten oder eines folgenden Versicherungsjahres (VVG Art. 35a) |
+| Sachversicherung | 3 Monate | Ende des dritten oder eines folgenden Versicherungsjahres (VVG Art. 35a) |
+| Lebensversicherung | nach Ablauf eines Jahres | Kündigungsrecht des Versicherungsnehmers (VVG Art. 89) |
 
 #### Abonnemente (Vertrag/AGB)
 | Abo | Frist | Hinweis |
@@ -192,11 +193,12 @@ Wird während Gerichtsferien zugestellt → Frist beginnt am ersten Tag **nach**
 | Function | Purpose |
 |----------|---------|
 | `calculateDeadline()` | Main deadline calculation |
+| `getDeadlineTimelineCount()` | Legal running-day number for calendar/PDF |
 | `getCourtHolidayPeriodEnd()` | Art. 146: Find end of court holiday period |
 | `isInCourtHolidays()` | Art. 145: Check if date is in court holidays |
 | `calculateEasterDate()` | Gaussian Easter formula |
 | `isWeekendOrHoliday()` | Art. 142 Abs. 3: Check weekend/holiday |
-| `getHolidaysForYear()` | Get holidays (national + cantonal) for year |
+| `getHolidaysForYear()` | Resolve explicitly selected holidays for year |
 
 ### scripts/app.js
 

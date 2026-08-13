@@ -1,6 +1,6 @@
-# Testprotokoll Fristenrechner
+# Testprotokoll der drei Rechner
 
-Dieses Dokument beschreibt die geprüften Berechnungsregeln des Fristenrechners nach der Schweizerischen Zivilprozessordnung (ZPO). Die automatisierten Tests in `test.js` laden direkt `scripts/calculations.js`; es gibt keine separate Testkopie der Berechnungslogik mehr.
+Die automatisierten Tests in `test.js` laden direkt die produktive Logik des Fristen-, Verjährungs- und Kündigungsrechners. Es gibt keine separate Testkopie der Berechnungsregeln.
 
 ## Zusammenfassung
 
@@ -14,6 +14,10 @@ Dieses Dokument beschreibt die geprüften Berechnungsregeln des Fristenrechners 
 | Art. 145 Abs. 1 | Gerichtsferien unterbrechen den Fristenlauf | Geprüft |
 | Art. 145 Abs. 2 | Kein Fristenstillstand im Schlichtungs- und summarischen Verfahren | Geprüft in der UI-Logik |
 | Art. 146 | Zustellung während Gerichtsferien: Fristlauf beginnt am ersten Tag nach Ferienende | Geprüft |
+| OR Art. 137-138 | Neubeginn nach Unterbrechung und Zehnjahresfrist bei Urkunde/Urteil | Geprüft |
+| OR Art. 335b/335c | Arbeitsrechtliche Kündigungsfristen, inklusive Monatsende | Geprüft |
+| VVG Art. 35a/89 | Versicherungsjahr wird eingegeben; Lebensversicherung nach einem Jahr | Geprüft |
+| KVG Art. 7 | Jahres- und Halbjahreswechsel der Grundversicherung | Geprüft |
 
 ## Art. 142 Abs. 1 ZPO - Tagesfristen
 
@@ -28,7 +32,7 @@ Beispiel:
 
 ## Art. 142 Abs. 1bis ZPO - Gewöhnliche Post
 
-Bei gewöhnlicher Post gilt eine Zustellung an einem Samstag, Sonntag oder anerkannten Feiertag als am nächsten Werktag erfolgt. Die Berechnung wendet diese Zustellfiktion vor der Prüfung der Gerichtsferien an.
+Bei gewöhnlicher Post ohne Empfangsbestätigung, insbesondere A-Post Plus, gilt eine Zustellung an einem Samstag, Sonntag oder anerkannten Feiertag als am nächsten Werktag erfolgt. Die Berechnung wendet diese Zustellfiktion vor der Prüfung der Gerichtsferien an.
 
 Geprüfte Fälle:
 
@@ -109,16 +113,34 @@ Die Osterdaten werden dynamisch berechnet. Geprüfte Referenzwerte:
 | 2024 | 31.03.2024 |
 | 2025 | 20.04.2025 |
 
+## Kalenderdarstellung
+
+Der sichtbare Kalender und der PDF-Kalender verwenden dieselbe Funktion `getDeadlineTimelineCount()`. Gerichtsferientage erhalten keine laufende Tagesnummer, Monatsfristen keinen Tageszähler und ein nach Art. 142 Abs. 3 verschobener Schlusswerktag keinen zusätzlichen Fristtag.
+
+## Verjährungsrechner
+
+Geprüft werden die strikte Datumserfassung, die Behandlung des Schalttags und der Neubeginn nach OR Art. 137-138. Bei einer ordentlichen Unterbrechung beginnen relative und absolute Frist neu; bei Anerkennung in einer Urkunde oder rechtskräftigem Urteil wird die neue Zehnjahresfrist verwendet.
+
+## Kündigungsrechner
+
+Geprüft werden insbesondere:
+
+- 31. Januar plus ein Monat endet am 28. Februar und springt nicht in den März.
+- Versicherungsjahres- und Vertragsenden werden als reale Termine eingegeben und auf Rechtzeitigkeit geprüft.
+- Das Kündigungsrecht für Lebensversicherungen wird nach Ablauf eines Jahres geprüft.
+- Nach verpasstem 30. November wird der Grundversicherungswechsel erst für das folgende Jahresende ausgewiesen.
+- Ungültige Kalendertage wie 31. Februar werden abgewiesen.
+
 ## Testausführung
 
 ```bash
 $ node test.js
 
 === ERGEBNIS ===
-18 bestanden, 0 fehlgeschlagen
+34 bestanden, 0 fehlgeschlagen
 Alle Tests bestanden!
 ```
 
 ## Stand
 
-Letzte Überprüfung: Juli 2026
+Letzte Überprüfung: August 2026

@@ -223,24 +223,21 @@ const FristPdfExport = {
     /**
      * Sammelt die Kalenderdaten aus dem DOM
      */
-    collectCalendarData(startDate, endDate, useCourtHolidays, selectedHolidays) {
+    collectCalendarData(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery) {
         const calendarData = [];
+        const calendarStartDate = toLocalCalendarDate(startDate);
+        const calendarEndDate = toLocalCalendarDate(endDate);
 
         // Ersten Montag vor oder am Startdatum finden
-        let currentDate = new Date(startDate);
+        let currentDate = new Date(calendarStartDate);
         while (currentDate.getDay() !== 1) {
             currentDate.setDate(currentDate.getDate() - 1);
         }
 
-        const isMonthFrist = document.getElementById('fristType')?.value?.startsWith('months_') || false;
-        let dayCount = 0;
-
-        while (currentDate <= endDate || currentDate.getDay() !== 1) {
-            const isBeforeStart = currentDate < startDate;
-            const isAfterEnd = currentDate > endDate;
-            const isEndDate = currentDate.toDateString() === endDate.toDateString();
-            const isStartDate = currentDate.toDateString() === startDate.toDateString();
-
+        while (currentDate <= calendarEndDate || currentDate.getDay() !== 1) {
+            const isBeforeStart = currentDate < calendarStartDate;
+            const isAfterEnd = currentDate > calendarEndDate;
+            const isEndDate = currentDate.toDateString() === calendarEndDate.toDateString();
             let type = 'normal';
             if (isBeforeStart || isAfterEnd) {
                 type = 'empty';
@@ -252,20 +249,21 @@ const FristPdfExport = {
                 type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'holiday';
             }
 
-            // Tag zählen
-            if (!isBeforeStart && !isAfterEnd && type !== 'empty') {
-                if (!isMonthFrist && !isStartDate) {
-                    dayCount++;
-                } else if (isMonthFrist) {
-                    dayCount++;
-                }
-            }
+            const dayCount = type === 'empty' ? null : getDeadlineTimelineCount(
+                currentDate,
+                startDate,
+                fristType,
+                customValue,
+                useCourtHolidays,
+                selectedHolidays,
+                useWeekendDelivery
+            );
 
             calendarData.push({
                 date: new Date(currentDate),
                 dateStr: `${currentDate.getDate()}.${currentDate.getMonth() + 1}.`,
                 type: type,
-                count: type !== 'empty' ? dayCount : null
+                count: dayCount
             });
 
             currentDate.setDate(currentDate.getDate() + 1);
@@ -434,12 +432,14 @@ const VerjaehrungPdfExport = {
 
         const inputLines = [
             [texts.claimType, data.claimType],
+            [texts.selectedLegalBasis, data.legalBasis || '-'],
             [texts.claimDate, this.formatDate(data.claimDate, lang)],
             [texts.limitationPeriod, data.periodText]
         ];
 
         if (data.interrupted) {
             inputLines.push([texts.interrupted, texts.yes]);
+            inputLines.push([texts.interruptionKind, data.interruptionKind || '-']);
             inputLines.push([texts.interruptionDate, this.formatDate(data.interruptionDate, lang)]);
         }
 
@@ -563,9 +563,11 @@ const VerjaehrungPdfExport = {
                 date: 'Date',
                 inputData: 'Données saisies',
                 claimType: 'Type de créance',
+                selectedLegalBasis: 'Base légale sélectionnée',
                 claimDate: 'Date de naissance',
                 limitationPeriod: 'Délai de prescription',
                 interrupted: 'Interruption',
+                interruptionKind: 'Nouveau départ',
                 interruptionDate: 'Date d\'interruption',
                 yes: 'Oui',
                 result: 'Résultat',
@@ -581,9 +583,11 @@ const VerjaehrungPdfExport = {
             date: 'Datum',
             inputData: 'Eingabedaten',
             claimType: 'Art der Forderung',
+            selectedLegalBasis: 'Gewählte Rechtsgrundlage',
             claimDate: 'Entstehungsdatum',
             limitationPeriod: 'Verjährungsfrist',
             interrupted: 'Unterbrechung',
+            interruptionKind: 'Neubeginn',
             interruptionDate: 'Unterbrechungsdatum',
             yes: 'Ja',
             result: 'Ergebnis',
@@ -639,6 +643,7 @@ const KuendigungPdfExport = {
         const inputLines = [
             [texts.contractType, data.contractType],
             [texts.noticePeriod, data.noticePeriod],
+            [texts.noticeDate, this.formatDate(data.noticeDate, lang)],
             [texts.plannedDate, this.formatDate(data.plannedDate, lang)]
         ];
 
@@ -754,6 +759,7 @@ const KuendigungPdfExport = {
                 inputData: 'Données saisies',
                 contractType: 'Type de contrat',
                 noticePeriod: 'Délai de préavis',
+                noticeDate: 'Résiliation reçue le',
                 plannedDate: 'Date souhaitée',
                 additionalInfo: 'Informations',
                 result: 'Résultat',
@@ -772,6 +778,7 @@ const KuendigungPdfExport = {
             inputData: 'Eingabedaten',
             contractType: 'Vertragsart',
             noticePeriod: 'Kündigungsfrist',
+            noticeDate: 'Kündigung zugegangen am',
             plannedDate: 'Gewünschtes Datum',
             additionalInfo: 'Zusatzinfo',
             result: 'Ergebnis',

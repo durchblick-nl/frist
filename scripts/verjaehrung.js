@@ -18,6 +18,7 @@ const TRANSLATIONS = {
         legalBasis: 'Rechtsgrundlage',
         prescriptionPeriod: 'Verjährungsfrist',
         interruptedOn: 'Unterbrochen am',
+        interruptionKind: 'Neubeginn',
         periodStart: 'Fristbeginn',
         relativePrescription: 'Relative Verjährung',
         absolutePrescription: 'Absolute Verjährung',
@@ -53,6 +54,7 @@ const TRANSLATIONS = {
         legalBasis: 'Base légale',
         prescriptionPeriod: 'Délai de prescription',
         interruptedOn: 'Interrompu le',
+        interruptionKind: 'Nouveau départ',
         periodStart: 'Début du délai',
         relativePrescription: 'Prescription relative',
         absolutePrescription: 'Prescription absolue',
@@ -99,8 +101,8 @@ const CLAIM_TYPES = {
         name: { de: 'Vertragliche Ansprüche', fr: 'Créances contractuelles' },
         article: 'OR Art. 127',
         info: {
-            de: 'Allgemeine vertragliche Ansprüche wie Kaufpreis, Darlehen, Werklohn.',
-            fr: 'Créances contractuelles générales comme prix d\'achat, prêt, prix de l\'ouvrage.'
+            de: 'Vertragliche Ansprüche ohne besondere kürzere Frist, etwa Kaufpreis- oder Darlehensforderungen. Für viele Werklohnforderungen gilt Art. 128 OR.',
+            fr: 'Créances contractuelles sans délai spécial plus court, par exemple prix de vente ou prêt. De nombreuses créances d’artisans relèvent de l’art. 128 CO.'
         }
     },
     'judgment_10': {
@@ -118,8 +120,8 @@ const CLAIM_TYPES = {
         name: { de: 'Miet- und Pachtzinsen', fr: 'Loyers et fermages' },
         article: 'OR Art. 128 Ziff. 1',
         info: {
-            de: 'Gilt für Mietzinsforderungen, nicht für Nebenkosten-Nachzahlungen.',
-            fr: 'S\'applique aux loyers, pas aux rappels de charges.'
+            de: 'Gilt für Miet- und Pachtzinse sowie andere periodische Leistungen. Die Einordnung einzelner Nebenkostenforderungen ist gesondert zu prüfen.',
+            fr: 'S’applique aux loyers, fermages et autres prestations périodiques. La qualification de certaines charges doit être examinée séparément.'
         }
     },
     'salary_5': {
@@ -253,18 +255,18 @@ const CLAIM_TYPES = {
         name: { de: 'Transportschäden', fr: 'Dommages de transport' },
         article: 'OR Art. 454',
         info: {
-            de: 'Ansprüche aus Frachtvertrag.',
-            fr: 'Actions dérivant du contrat de transport.'
+            de: 'Ersatzklagen gegen den Frachtführer: bei Untergang, Verlust oder Verspätung ab dem vorgesehenen Ablieferungstag; bei Beschädigung ab Übergabe an den Adressaten.',
+            fr: 'Actions en dommages-intérêts contre le voiturier: dès le jour prévu pour la livraison en cas de destruction, perte ou retard; dès la remise au destinataire en cas d’avarie.'
         }
     },
     // Special cases
     'loss_certificate_20': {
         years: 20,
         name: { de: 'Verlustscheine', fr: 'Actes de défaut de biens' },
-        article: 'OR Art. 149a',
+        article: { de: 'SchKG Art. 149a', fr: 'LP art. 149a' },
         info: {
-            de: 'Forderungen aus Verlustscheinen verjähren 20 Jahre nach Ausstellung.',
-            fr: 'Les créances constatées par acte de défaut de biens se prescrivent par 20 ans.'
+            de: 'Forderungen aus Verlustscheinen verjähren 20 Jahre nach Ausstellung; gegenüber Erben spätestens ein Jahr nach Eröffnung des Erbgangs.',
+            fr: 'Les créances constatées par acte de défaut de biens se prescrivent 20 ans après l’acte; envers les héritiers, au plus tard un an après l’ouverture de la succession.'
         }
     },
     'culture_30': {
@@ -283,8 +285,8 @@ const CLAIM_TYPES = {
         name: { de: 'Regress Solidarhaftung', fr: 'Recours solidarité' },
         article: 'OR Art. 139',
         info: {
-            de: 'Regressansprüche unter Solidarschuldnern verjähren 3 Jahre ab Zahlung.',
-            fr: 'Les actions récursoires entre débiteurs solidaires se prescrivent par 3 ans dès le paiement.'
+            de: 'Regressansprüche unter Solidarschuldnern verjähren 3 Jahre ab Zahlung und Kenntnis des Mitschuldners.',
+            fr: 'Les recours entre codébiteurs solidaires se prescrivent par 3 ans dès le paiement et la connaissance du codébiteur.'
         }
     },
     'insurance_5': {
@@ -292,8 +294,8 @@ const CLAIM_TYPES = {
         name: { de: 'Versicherungsansprüche', fr: 'Créances d\'assurance' },
         article: 'VVG Art. 46 (seit 2022)',
         info: {
-            de: 'Seit 2022 verjähren Versicherungsansprüche nach 5 Jahren (zuvor 2 Jahre).',
-            fr: 'Depuis 2022, les créances d\'assurance se prescrivent par 5 ans (auparavant 2 ans).'
+            de: 'Seit 2022 verjähren Versicherungsansprüche 5 Jahre nach Eintritt der Tatsache, welche die Leistungspflicht begründet (zuvor 2 Jahre).',
+            fr: 'Depuis 2022, les créances d’assurance se prescrivent 5 ans après le fait d’où naît l’obligation de l’assureur (auparavant 2 ans).'
         }
     }
 };
@@ -305,15 +307,27 @@ function getClaimType(key) {
     return {
         ...type,
         name: type.name[LANG] || type.name.de,
-        info: type.info[LANG] || type.info.de
+        info: type.info[LANG] || type.info.de,
+        article: typeof type.article === 'object' ? (type.article[LANG] || type.article.de) : localizeLegalReference(type.article)
     };
+}
+
+function localizeLegalReference(reference) {
+    if (LANG !== 'fr') return reference;
+    return reference.replace(/^OR\b/, 'CO').replace(/^VVG\b/, 'LCA').replace(/^SchKG\b/, 'LP');
 }
 
 // Date utilities
 function parseDate(dateStr) {
-    const parts = dateStr.split('.');
-    if (parts.length !== 3) return null;
-    return new Date(parts[2], parts[1] - 1, parts[0]);
+    const match = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(dateStr.trim());
+    if (!match) return null;
+    const day = Number(match[1]);
+    const month = Number(match[2]);
+    const year = Number(match[3]);
+    const parsed = new Date(year, month - 1, day);
+    return parsed.getFullYear() === year && parsed.getMonth() === month - 1 && parsed.getDate() === day
+        ? parsed
+        : null;
 }
 
 function formatDate(date) {
@@ -322,9 +336,54 @@ function formatDate(date) {
 }
 
 function addYears(date, years) {
-    const result = new Date(date);
-    result.setFullYear(result.getFullYear() + years);
-    return result;
+    const targetYear = date.getFullYear() + years;
+    const lastDay = new Date(targetYear, date.getMonth() + 1, 0).getDate();
+    return new Date(targetYear, date.getMonth(), Math.min(date.getDate(), lastDay));
+}
+
+/**
+ * Calculates the periods after an interruption under OR arts. 137-138.
+ * `restartDate` is the legally relevant restart date, not necessarily the date
+ * on which a procedural act was filed: court proceedings restart the period
+ * only when the instance ends; enforcement restarts it with each act.
+ */
+function calculatePrescription(type, relativeStartDate, absoluteStartDate = null, interruptionType = 'none', restartDate = null) {
+    let relativeYears = type.years;
+    let absoluteYears = type.hasAbsolute ? type.absoluteYears : null;
+    let effectiveRelativeStart = relativeStartDate;
+    let effectiveAbsoluteStart = absoluteStartDate;
+
+    if (interruptionType !== 'none') {
+        if (!restartDate) return null;
+        effectiveRelativeStart = restartDate;
+        effectiveAbsoluteStart = restartDate;
+
+        // OR art. 137 para. 2 replaces the new period with ten years when the
+        // claim is acknowledged in a document or established by judgment.
+        if (interruptionType === 'document_or_judgment') {
+            relativeYears = 10;
+            absoluteYears = null;
+        }
+    }
+
+    const relativeExpiration = addYears(effectiveRelativeStart, relativeYears);
+    const absoluteExpiration = absoluteYears && effectiveAbsoluteStart
+        ? addYears(effectiveAbsoluteStart, absoluteYears)
+        : null;
+    const relevantExpiration = absoluteExpiration && absoluteExpiration < relativeExpiration
+        ? absoluteExpiration
+        : relativeExpiration;
+
+    return {
+        relativeYears,
+        absoluteYears,
+        effectiveRelativeStart,
+        effectiveAbsoluteStart,
+        relativeExpiration,
+        absoluteExpiration,
+        relevantExpiration,
+        isAbsoluteRelevant: Boolean(absoluteExpiration && absoluteExpiration < relativeExpiration)
+    };
 }
 
 function daysBetween(date1, date2) {
@@ -353,12 +412,15 @@ function updateClaimInfo() {
 
         if (type.hasAbsolute) {
             absoluteGroup.style.display = 'block';
+            document.getElementById('absoluteDate').required = true;
         } else {
             absoluteGroup.style.display = 'none';
+            document.getElementById('absoluteDate').required = false;
         }
     } else {
         infoDiv.style.display = 'none';
         absoluteGroup.style.display = 'none';
+        document.getElementById('absoluteDate').required = false;
     }
 }
 
@@ -366,19 +428,25 @@ function toggleInterruptionDate() {
     const checkbox = document.getElementById('interrupted');
     const group = document.getElementById('interruptionDateGroup');
     group.style.display = checkbox.checked ? 'block' : 'none';
+    const type = document.getElementById('interruptionType');
+    const date = document.getElementById('interruptionDate');
+    if (type) type.required = checkbox.checked;
+    if (date) date.required = checkbox.checked;
 }
 
 // PDF Export data storage
 let lastVerjaehrungData = null;
 
-function saveVerjaehrungData(claimType, startDate, periodYears, periodText, endDate, interrupted, interruptionDate, isExpired, statusText) {
+function saveVerjaehrungData(claimType, legalBasis, startDate, periodYears, periodText, endDate, interrupted, interruptionKind, interruptionDate, isExpired, statusText) {
     lastVerjaehrungData = {
         claimType: claimType,
+        legalBasis: legalBasis,
         claimDate: startDate,
         periodYears: periodYears,
         periodText: periodText,
         endDate: endDate,
         interrupted: interrupted,
+        interruptionKind: interruptionKind,
         interruptionDate: interruptionDate,
         isExpired: isExpired,
         statusText: statusText
@@ -421,6 +489,7 @@ function handleFormSubmit(e) {
     const absoluteDateStr = document.getElementById('absoluteDate')?.value || '';
     const interrupted = document.getElementById('interrupted').checked;
     const interruptionDateStr = document.getElementById('interruptionDate')?.value || '';
+    const interruptionType = interrupted ? (document.getElementById('interruptionType')?.value || '') : 'none';
 
     if (!claimTypeValue || !startDateStr) {
         alert(T.fillAllFields);
@@ -428,40 +497,24 @@ function handleFormSubmit(e) {
     }
 
     const type = getClaimType(claimTypeValue);
-    let startDate = parseDate(startDateStr);
+    const startDate = parseDate(startDateStr);
+    const absoluteDate = absoluteDateStr ? parseDate(absoluteDateStr) : null;
+    const restartDate = interruptionDateStr ? parseDate(interruptionDateStr) : null;
 
-    if (!startDate) {
+    if (!startDate || (absoluteDateStr && !absoluteDate) || (interrupted && (!interruptionType || !restartDate))) {
+        alert(T.invalidDate);
+        return;
+    }
+    if ((absoluteDate && absoluteDate > startDate) || (restartDate && restartDate < startDate)) {
         alert(T.invalidDate);
         return;
     }
 
-    // If interrupted, use interruption date as new start
-    if (interrupted && interruptionDateStr) {
-        const interruptionDate = parseDate(interruptionDateStr);
-        if (interruptionDate) {
-            startDate = interruptionDate;
-        }
-    }
-
-    // Calculate expiration date
-    const expirationDate = addYears(startDate, type.years);
-
-    // Calculate absolute expiration if applicable
-    let absoluteExpiration = null;
-    if (type.hasAbsolute && absoluteDateStr) {
-        const absoluteDate = parseDate(absoluteDateStr);
-        if (absoluteDate) {
-            absoluteExpiration = addYears(absoluteDate, type.absoluteYears);
-        }
-    }
-
-    // Determine which date is earlier (relevant expiration)
-    let relevantExpiration = expirationDate;
-    let isAbsoluteRelevant = false;
-    if (absoluteExpiration && absoluteExpiration < expirationDate) {
-        relevantExpiration = absoluteExpiration;
-        isAbsoluteRelevant = true;
-    }
+    const calculation = calculatePrescription(type, startDate, absoluteDate, interruptionType || 'none', restartDate);
+    const expirationDate = calculation.relativeExpiration;
+    const absoluteExpiration = calculation.absoluteExpiration;
+    const relevantExpiration = calculation.relevantExpiration;
+    const isAbsoluteRelevant = calculation.isAbsoluteRelevant;
 
     // Calculate days remaining
     const today = new Date();
@@ -489,9 +542,12 @@ function handleFormSubmit(e) {
     }
 
     // Build period text
-    const periodText = type.absoluteYears
-        ? `${type.years} ${T.yearsRelative} / ${type.absoluteYears} ${T.yearsAbsolute}`
-        : `${type.years} ${T.years}`;
+    const periodText = calculation.absoluteYears
+        ? `${calculation.relativeYears} ${T.yearsRelative} / ${calculation.absoluteYears} ${T.yearsAbsolute}`
+        : `${calculation.relativeYears} ${T.years}`;
+    const interruptionKindText = interruptionType === 'document_or_judgment'
+        ? (LANG === 'fr' ? 'Titre ou jugement: 10 ans' : 'Urkunde oder Urteil: 10 Jahre')
+        : (LANG === 'fr' ? 'Nouveau départ ordinaire' : 'Ordentlicher Neubeginn');
 
     // Build result HTML
     let resultHTML = `
@@ -511,13 +567,17 @@ function handleFormSubmit(e) {
             </tr>
             ${interrupted ? `
             <tr>
+                <td>${T.interruptionKind}:</td>
+                <td>${interruptionKindText}</td>
+            </tr>
+            <tr>
                 <td>${T.interruptedOn}:</td>
                 <td>${interruptionDateStr}</td>
             </tr>
             ` : ''}
             <tr>
                 <td>${T.periodStart}:</td>
-                <td>${formatDate(startDate)}</td>
+                <td>${formatDate(calculation.effectiveRelativeStart)}</td>
             </tr>
     `;
 
@@ -572,12 +632,14 @@ function handleFormSubmit(e) {
 
     saveVerjaehrungData(
         type.name,
-        startDate,
-        type.years,
+        type.article,
+        calculation.effectiveRelativeStart,
+        calculation.relativeYears,
         periodText,
         relevantExpiration,
         interrupted,
-        interrupted ? parseDate(interruptionDateStr) : null,
+        interrupted ? interruptionKindText : '',
+        interrupted ? restartDate : null,
         daysRemaining < 0,
         countdownText
     );

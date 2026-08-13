@@ -56,10 +56,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="../css/styles.css?v=2">
+    <link rel="stylesheet" href="../css/styles.css?v=4">
     <style>
         .tool-nav {
             display: flex;
@@ -164,7 +164,7 @@
                     <label>Zustellungsart (Art. 142 Abs. 1<sup>bis</sup> ZPO)
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">Nur für gewöhnliche Post (A-Post, B-Post) relevant. Bei Einschreiben oder A-Post Plus gilt das tatsächliche Zustelldatum.</span>
+                            <span class="tooltip-content">Gilt für gewöhnliche Post ohne Empfangsbestätigung, insbesondere auch für A-Post Plus. Nicht anwenden bei eingeschriebener oder anderer Zustellung gegen Empfangsbestätigung.</span>
                         </span>
                     </label>
                     <div class="checkbox-group">
@@ -255,16 +255,16 @@
                     <label>Zu berücksichtigende Feiertage</label>
                     <div class="holiday-selection">
                         <div class="holiday-category">
-                            <h4>Nationale Feiertage
+                            <h4>Schweizweit übliche Feiertage
                                 <span class="info-tooltip">
                                     <span class="info-icon">?</span>
-                                    <span class="tooltip-content">Neujahr (1.1.), Auffahrt, Bundesfeiertag (1.8.) und Weihnachten (25.12.) – in der ganzen Schweiz anerkannt.</span>
+                                    <span class="tooltip-content">Nur der 1. August ist ein eidgenössischer Feiertag. Neujahr, Auffahrt und Weihnachten werden kantonal anerkannt und sind schweizweit üblich.</span>
                                 </span>
                             </h4>
                             <div class="checkbox-group">
                                 <label class="checkbox-label">
                                     <input type="checkbox" name="holidays" value="all_national" checked>
-                                    Alle nationalen Feiertage
+                                    Neujahr, Auffahrt, 1. August und Weihnachten
                                 </label>
                             </div>
                         </div>
@@ -273,7 +273,7 @@
                             <h4>Kantonale Feiertage
                                 <span class="info-tooltip">
                                     <span class="info-icon">?</span>
-                                    <span class="tooltip-content">Wählen Sie einen Kanton, um die dort geltenden Feiertage automatisch zu aktivieren.</span>
+                                    <span class="tooltip-content">Der Kanton wird dokumentiert. Wählen Sie die am konkreten Gerichtsort anerkannten Feiertage manuell; diese können lokal oder konfessionell abweichen.</span>
                                 </span>
                             </h4>
                             <div class="canton-selector">
@@ -363,7 +363,7 @@
 
                 <div class="warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    Bitte beachten Sie: Dieser Rechner dient nur zur Orientierung. Für die Wahrung von Fristen sind Sie selbst verantwortlich.
+                    Feiertage müssen am konkreten Gerichtsort anerkannt sein (Art. 142 Abs. 3 ZPO). Prüfen Sie die Auswahl bei Gericht oder Kanton. Der Rechner dient nur zur Orientierung.
                 </div>
 
                 <button type="submit">Frist berechnen</button>
@@ -443,7 +443,7 @@
                 </div>
                 <div class="step-content">
                     <h3>Kantonale Feiertage</h3>
-                    <p>Neben den nationalen Feiertagen gelten je nach Kanton unterschiedliche Feiertage. Diese werden in der Berechnung berücksichtigt.</p>
+                    <p>Massgebend sind die vom Bundesrecht oder kantonalen Recht anerkannten Feiertage am Gerichtsort. Weil sie lokal abweichen können, werden nur die ausdrücklich gewählten Feiertage berücksichtigt.</p>
                 </div>
             </div>
         </div>
@@ -573,9 +573,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
-    <script src="../scripts/utils.js?v=3"></script>
-    <script src="../scripts/calculations.js?v=3"></script>
-    <script src="../scripts/app.js?v=3"></script>
-    <script src="../scripts/pdf-export.js?v=3"></script>
+    <script src="../scripts/utils.js?v=4"></script>
+    <script src="../scripts/calculations.js?v=4"></script>
+    <script src="../scripts/app.js?v=4"></script>
+    <script src="../scripts/pdf-export.js?v=4"></script>
 </body>
 </html>

@@ -56,10 +56,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="../css/styles.css?v=2">
+    <link rel="stylesheet" href="../css/styles.css?v=4">
     <style>
         .tool-nav {
             display: flex;
@@ -164,7 +164,7 @@
                     <label>Mode de notification (art. 142 al. 1<sup>bis</sup> CPC)
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">Pertinent uniquement pour le courrier ordinaire (A-Post, B-Post). Ne s'applique pas aux envois recommandés ni A-Post Plus.</span>
+                            <span class="tooltip-content">S’applique au courrier ordinaire sans accusé de réception, notamment A-Post Plus. Ne pas appliquer aux recommandés ni aux autres envois contre accusé de réception.</span>
                         </span>
                     </label>
                     <div class="checkbox-group">
@@ -255,16 +255,16 @@
                     <label>Jours fériés à prendre en compte</label>
                     <div class="holiday-selection">
                         <div class="holiday-category">
-                            <h4>Jours fériés nationaux
+                            <h4>Jours fériés usuels dans toute la Suisse
                                 <span class="info-tooltip">
                                     <span class="info-icon">?</span>
-                                    <span class="tooltip-content">Nouvel An (1.1.), Ascension, Fête nationale (1.8.) et Noël (25.12.) – reconnus dans toute la Suisse.</span>
+                                    <span class="tooltip-content">Seul le 1er août est un jour férié fédéral. Nouvel An, Ascension et Noël sont reconnus par les cantons et usuels dans toute la Suisse.</span>
                                 </span>
                             </h4>
                             <div class="checkbox-group">
                                 <label class="checkbox-label">
                                     <input type="checkbox" name="holidays" value="all_national" checked>
-                                    Tous les jours fériés nationaux
+                                    Nouvel An, Ascension, 1er août et Noël
                                 </label>
                             </div>
                         </div>
@@ -273,7 +273,7 @@
                             <h4>Jours fériés cantonaux
                                 <span class="info-tooltip">
                                     <span class="info-icon">?</span>
-                                    <span class="tooltip-content">Sélectionnez un canton pour activer automatiquement les jours fériés en vigueur.</span>
+                                    <span class="tooltip-content">Le canton est documenté. Sélectionnez manuellement les jours reconnus au siège du tribunal; ils peuvent varier localement ou selon la confession.</span>
                                 </span>
                             </h4>
                             <div class="canton-selector">
@@ -363,7 +363,7 @@
 
                 <div class="warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    Attention : Ce calculateur sert uniquement d'orientation. Vous êtes seul responsable du respect des délais.
+                    Le jour férié doit être reconnu au siège du tribunal (art. 142 al. 3 CPC). Vérifiez la sélection auprès du tribunal ou du canton. Ce calculateur sert uniquement d'orientation.
                 </div>
 
                 <button type="submit">Calculer le délai</button>
@@ -443,7 +443,7 @@
                 </div>
                 <div class="step-content">
                     <h3>Jours fériés cantonaux</h3>
-                    <p>En plus des jours fériés nationaux, différents jours fériés s'appliquent selon le canton. Ceux-ci sont pris en compte dans le calcul.</p>
+                    <p>Sont déterminants les jours fériés reconnus par le droit fédéral ou cantonal au siège du tribunal. Comme ils peuvent varier localement, seuls les jours expressément sélectionnés sont pris en compte.</p>
                 </div>
             </div>
         </div>
@@ -573,9 +573,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
-    <script src="../scripts/utils.js?v=3"></script>
-    <script src="../scripts/calculations.js?v=3"></script>
-    <script src="../scripts/app.js?v=3"></script>
-    <script src="../scripts/pdf-export.js?v=3"></script>
+    <script src="../scripts/utils.js?v=4"></script>
+    <script src="../scripts/calculations.js?v=4"></script>
+    <script src="../scripts/app.js?v=4"></script>
+    <script src="../scripts/pdf-export.js?v=4"></script>
 </body>
 </html>

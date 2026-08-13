@@ -4,67 +4,18 @@
 
 let datePicker;
 
-// Kantonale Feiertage - Zuordnung nach Kanton
-// Quellen:
-// - Schweizerische Bundeskanzlei: https://www.bk.admin.ch/bk/de/home/politische-rechte/feiertage.html
-// - Wikipedia: https://de.wikipedia.org/wiki/Feiertage_in_der_Schweiz
-const cantonHolidays = {
-    'AG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'AI': ['karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'AR': ['karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'BE': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'BL': ['karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
-    'BS': ['karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
-    'FR': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'GE': ['karfreitag', 'ostermontag', 'pfingstmontag'],
-    'GL': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'allerheiligen', 'stephanstag'],
-    'GR': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'JU': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen'],
-    'LU': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'NE': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag'],
-    'NW': ['karfreitag', 'ostermontag', 'pfingstmontag', 'josephstag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'OW': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'SG': ['karfreitag', 'ostermontag', 'pfingstmontag', 'allerheiligen', 'stephanstag'],
-    'SH': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
-    'SO': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'stephanstag'],
-    'SZ': ['berchtoldstag', 'dreikoenige', 'josephstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'TG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
-    'TI': ['dreikoenige', 'josephstag', 'ostermontag', 'tag_der_arbeit', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'UR': ['berchtoldstag', 'dreikoenige', 'josephstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'VD': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag'],
-    'VS': ['josephstag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis'],
-    'ZG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    // ZH: Berchtoldstag is not a cantonal statutory holiday; leave it manual.
-    'ZH': ['karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag']
-};
-
 // Kanton aus URL oder localStorage laden
 function getSelectedCanton() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('canton') || localStorage.getItem('frist-canton') || '';
 }
 
-// Kantonauswahl ändern
+// The canton is documented, but holidays are deliberately selected manually.
+// Art. 142 para. 3 CPC refers to the holiday recognized at the court location;
+// in several cantons this varies by municipality or district.
 function selectCanton() {
     const canton = document.getElementById('canton').value;
     localStorage.setItem('frist-canton', canton);
-
-    // Alle kantonalen Feiertage deselektieren
-    document.querySelectorAll('input[name="holidays"]').forEach(cb => {
-        if (cb.value !== 'all_national') {
-            cb.checked = false;
-        }
-    });
-
-    // Feiertage des gewählten Kantons selektieren
-    if (canton && cantonHolidays[canton]) {
-        cantonHolidays[canton].forEach(holiday => {
-            const checkbox = document.querySelector(`input[name="holidays"][value="${holiday}"]`);
-            if (checkbox) {
-                checkbox.checked = true;
-            }
-        });
-    }
 }
 
 // Save current language to localStorage for redirect
@@ -319,13 +270,13 @@ function displayResult(startDate, endDate, fristType, customValue, useCourtHolid
     `;
 
     // Generate calendar
-    generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays);
+    generateCalendar(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery);
 
     result.style.display = 'block';
     result.scrollIntoView({ behavior: 'smooth' });
 }
 
-function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays) {
+function generateCalendar(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery) {
     const timeline = document.querySelector('.timeline');
     timeline.innerHTML = '';
 
@@ -339,19 +290,17 @@ function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays
     calendarGrid.innerHTML = weekdays.map(d => `<div class="weekday-header">${d}</div>`).join('');
 
     // Find first Monday before or on start date
-    let currentDate = new Date(startDate);
+    const calendarStartDate = toLocalCalendarDate(startDate);
+    const calendarEndDate = toLocalCalendarDate(endDate);
+    let currentDate = new Date(calendarStartDate);
     while (currentDate.getDay() !== 1) {
         currentDate.setDate(currentDate.getDate() - 1);
     }
 
-    let dayCount = 0;
-    const isMonthFrist = document.getElementById('fristType').value.startsWith('months_');
-
-    while (currentDate <= endDate || currentDate.getDay() !== 1) {
-        const isBeforeStart = currentDate < startDate;
-        const isAfterEnd = currentDate > endDate;
-        const isStartDate = currentDate.toDateString() === startDate.toDateString();
-        const isEndDate = currentDate.toDateString() === endDate.toDateString();
+    while (currentDate <= calendarEndDate || currentDate.getDay() !== 1) {
+        const isBeforeStart = currentDate < calendarStartDate;
+        const isAfterEnd = currentDate > calendarEndDate;
+        const isEndDate = currentDate.toDateString() === calendarEndDate.toDateString();
 
         let dateClass = 'normal';
         if (isBeforeStart || isAfterEnd) {
@@ -364,14 +313,15 @@ function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays
             dateClass = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'holiday';
         }
 
-        // Count days for day deadlines
-        if (!isBeforeStart && !isAfterEnd && dateClass !== 'empty-day') {
-            if (!isMonthFrist && !isStartDate) {
-                dayCount++;
-            } else if (isMonthFrist) {
-                dayCount++;
-            }
-        }
+        const dayCount = dateClass === 'empty-day' ? null : getDeadlineTimelineCount(
+            currentDate,
+            startDate,
+            fristType,
+            customValue,
+            useCourtHolidays,
+            selectedHolidays,
+            useWeekendDelivery
+        );
 
         const dayBox = document.createElement('div');
         dayBox.className = `date-box ${dateClass}`;
@@ -379,7 +329,7 @@ function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays
         if (dateClass !== 'empty-day') {
             dayBox.innerHTML = `
                 <div class="date">${currentDate.getDate()}.${currentDate.getMonth() + 1}.</div>
-                ${dayCount > 0 ? `<div class="count">${dayCount}</div>` : ''}
+                ${dayCount !== null ? `<div class="count">${dayCount}</div>` : ''}
             `;
         }
 
@@ -387,7 +337,7 @@ function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays
         currentDate.setDate(currentDate.getDate() + 1);
 
         // Safety break
-        if (dayCount > 365) break;
+        if (timeline.children.length > 400) break;
     }
 }
 
@@ -452,7 +402,7 @@ function saveCalculationData(startDate, endDate, fristType, customValue, useCour
 
     // Kalenderdaten sammeln
     const calendarData = typeof FristPdfExport !== 'undefined'
-        ? FristPdfExport.collectCalendarData(startDate, endDate, useCourtHolidays, selectedHolidays)
+        ? FristPdfExport.collectCalendarData(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery)
         : [];
 
     lastCalculationData = {

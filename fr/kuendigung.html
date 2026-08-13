@@ -56,10 +56,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="../css/styles.css?v=2">
+    <link rel="stylesheet" href="../css/styles.css?v=4">
     <style>
         .tool-nav {
             display: flex;
@@ -209,16 +209,17 @@
                             <option value="work_year10">Dès la 10e année (3 mois)</option>
                         </optgroup>
                         <optgroup label="Bail (CO art. 266)">
-                            <option value="rent_apartment">Logement (3 mois pour fin de trimestre)</option>
-                            <option value="rent_business">Locaux commerciaux (6 mois pour fin de trimestre)</option>
-                            <option value="rent_room">Chambre meublée (2 semaines pour fin de mois)</option>
-                            <option value="rent_parking">Place de parc (2 semaines pour fin de mois)</option>
+                            <option value="rent_apartment">Logement (3 mois pour le terme déterminant)</option>
+                            <option value="rent_business">Locaux commerciaux (6 mois pour le terme déterminant)</option>
+                            <option value="rent_room">Chambre meublée (2 semaines pour fin de période)</option>
+                            <option value="rent_parking">Place de parc séparée (2 semaines pour fin de période)</option>
                         </optgroup>
                         <optgroup label="Assurances">
                             <option value="insurance_health_basic">Assurance maladie de base (30 novembre)</option>
+                            <option value="insurance_health_basic_midyear">Assurance de base modèle standard (31 mars)</option>
                             <option value="insurance_health_extra">Assurance complémentaire (3 mois)</option>
                             <option value="insurance_property">Assurance RC/auto (3 mois)</option>
-                            <option value="insurance_life">Assurance vie (3 mois)</option>
+                            <option value="insurance_life">Assurance vie (après une année)</option>
                         </optgroup>
                         <optgroup label="Abonnements">
                             <option value="subscription_fitness">Fitness (3 mois avant échéance)</option>
@@ -247,11 +248,25 @@
                     </select>
                 </div>
 
+                <div class="form-group" id="contractStartGroup" style="display: none;">
+                    <label for="contractStartDate" class="required">Début du contrat</label>
+                    <input type="text" id="contractStartDate" name="contractStartDate" title="Début du contrat" pattern="\d{2}\.\d{2}\.\d{4}">
+                    <small class="form-hint">Format: JJ.MM.AAAA</small>
+                </div>
+
+                <div class="form-group" id="targetEndGroup" style="display: none;">
+                    <label for="targetEndDate" class="required">Fin de contrat souhaitée
+                        <span class="info-tooltip"><span class="info-icon">?</span><span class="tooltip-content">Indiquez le terme contractuel, usuel local ou de l’année d’assurance. Il ne peut pas être déduit de la date de résiliation seule.</span></span>
+                    </label>
+                    <input type="text" id="targetEndDate" name="targetEndDate" title="Fin souhaitée" pattern="\d{2}\.\d{2}\.\d{4}">
+                    <small class="form-hint">Format: JJ.MM.AAAA</small>
+                </div>
+
                 <div class="form-group">
                     <label for="noticeDate" class="required">Date de la résiliation (notification)
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">La date à laquelle la résiliation parvient au destinataire. Pour lettres recommandées: date de réception ou fin du délai de garde.</span>
+                            <span class="tooltip-content">La date de réception juridiquement déterminante. Pour un recommandé, le retrait et la fiction de notification peuvent être pertinents; envoyez-le suffisamment tôt.</span>
                         </span>
                     </label>
                     <input type="text"
@@ -265,7 +280,7 @@
 
                 <div class="warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    Attention: Ce sont des délais légaux minimaux. Des délais plus longs peuvent être convenus contractuellement. Vérifiez votre contrat!
+                    Attention: Les règles légales peuvent être modifiées dans les limites admises ou précisées par les CG. Vérifiez le contrat, la police et les règles spéciales.
                 </div>
 
                 <button type="submit">Calculer le terme de résiliation</button>
@@ -306,8 +321,8 @@
                 <div class="step-content">
                     <h3>Bail de logement (CO art. 266c)</h3>
                     <p>Délai de résiliation: <strong>3 mois</strong></p>
-                    <p>Terme: <strong>Terme usuel local</strong> (généralement fin de trimestre: 31.3., 30.6., 30.9., 31.12.)</p>
-                    <p style="margin-top: 0.5rem;">Dans de nombreux cantons, également pour fin de mois. Vérifiez votre bail!</p>
+                    <p>Terme: <strong>Terme usuel local</strong>; à défaut d’usage, fin d’une période de location de trois mois.</p>
+                    <p style="margin-top: 0.5rem;">Le calculateur demande donc le terme prévu par le bail ou l’usage local.</p>
                 </div>
             </div>
 
@@ -318,7 +333,7 @@
                 <div class="step-content">
                     <h3>Locaux commerciaux (CO art. 266d)</h3>
                     <p>Délai de résiliation: <strong>6 mois</strong></p>
-                    <p>Terme: <strong>Terme usuel local</strong> (généralement fin de trimestre)</p>
+                    <p>Terme: <strong>Terme usuel local</strong>; à défaut d’usage, fin d’une période de location de trois mois.</p>
                     <p style="margin-top: 0.5rem;">Pour les baux commerciaux, des délais contractuels plus longs sont courants.</p>
                 </div>
             </div>
@@ -330,8 +345,8 @@
                 <div class="step-content">
                     <h3>Assurances (LCA/LAMal)</h3>
                     <p><strong>Assurance de base:</strong> Résiliation jusqu'au 30 novembre pour changement au 1er janvier</p>
-                    <p><strong>Assurances choses:</strong> 3 mois pour fin d'année d'assurance</p>
-                    <p style="margin-top: 0.5rem;">Depuis LCA 2022: Tous les contrats résiliables après 3 ans avec préavis de 3 mois.</p>
+                    <p><strong>Assurance choses et complémentaire:</strong> 3 mois pour la fin de la troisième année d’assurance ou d’une année suivante (LCA art. 35a).</p>
+                    <p style="margin-top: 0.5rem;"><strong>Assurance vie:</strong> résiliation par le preneur après une année (LCA art. 89).</p>
                 </div>
             </div>
 
@@ -343,7 +358,7 @@
                     <h3>Abonnements</h3>
                     <p><strong>Fitness:</strong> Généralement 3 mois avant échéance</p>
                     <p><strong>Mobile/Internet:</strong> Généralement 60 jours avant échéance</p>
-                    <p style="margin-top: 0.5rem;">En cas de déménagement &gt;30km: Résiliation extraordinaire souvent possible.</p>
+                    <p style="margin-top: 0.5rem;">Ces délais découlent du contrat ou des CG et ne sont pas des délais légaux généraux.</p>
                 </div>
             </div>
 
@@ -353,8 +368,8 @@
                 </div>
                 <div class="step-content">
                     <h3>Remarques importantes</h3>
-                    <p><strong>Réception de la résiliation:</strong> La résiliation doit parvenir au destinataire avant le début du délai. Pour recommandé: au plus tard le dernier jour du délai de garde.</p>
-                    <p style="margin-top: 0.5rem;"><strong>Exigences de forme:</strong> La résiliation de bail d'habitation doit être faite sur formule officielle. La résiliation de contrat de travail n'est soumise à aucune forme.</p>
+                    <p><strong>Réception de la résiliation:</strong> La réception par le destinataire est en principe déterminante, pas le cachet postal. Le retrait et la fiction de notification peuvent compter pour un recommandé.</p>
+                    <p style="margin-top: 0.5rem;"><strong>Exigences de forme:</strong> Le bailleur doit résilier un logement ou un local commercial au moyen de la formule agréée par le canton. Le congé du contrat de travail n’est en principe soumis à aucune forme; une forme écrite peut être convenue.</p>
                 </div>
             </div>
         </div>
@@ -435,8 +450,8 @@
 
                 <p>Il est notamment précisé:</p>
                 <ul>
-                    <li>Le calculateur indique uniquement les délais légaux minimaux. Des dérogations contractuelles sont possibles.</li>
-                    <li>Vérifiez toujours votre contrat pour des dispositions particulières.</li>
+                    <li>Le calculateur combine des règles légales et des exemples contractuels/CG clairement signalés.</li>
+                    <li>Vérifiez le contrat, l’usage local, la police et les règles spéciales.</li>
                     <li>Durchblick Consultancy BV décline toute responsabilité pour les dommages résultant de l'utilisation.</li>
                 </ul>
 
@@ -450,8 +465,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
-    <script src="../scripts/utils.js?v=3"></script>
-    <script src="../scripts/pdf-export.js?v=3"></script>
-    <script src="../scripts/kuendigung.js?v=3"></script>
+    <script src="../scripts/utils.js?v=4"></script>
+    <script src="../scripts/pdf-export.js?v=4"></script>
+    <script src="../scripts/kuendigung.js?v=4"></script>
 </body>
 </html>

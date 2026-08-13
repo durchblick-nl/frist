@@ -56,10 +56,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="../css/styles.css?v=2">
+    <link rel="stylesheet" href="../css/styles.css?v=4">
     <style>
         .tool-nav {
             display: flex;
@@ -209,16 +209,17 @@
                             <option value="work_year10">Ab 10. Dienstjahr (3 Monate)</option>
                         </optgroup>
                         <optgroup label="Mietvertrag (OR Art. 266)">
-                            <option value="rent_apartment">Wohnung (3 Monate auf Quartal)</option>
-                            <option value="rent_business">Geschäftsräume (6 Monate auf Quartal)</option>
-                            <option value="rent_room">Möbliertes Zimmer (2 Wochen auf Monatsende)</option>
-                            <option value="rent_parking">Parkplatz (2 Wochen auf Monatsende)</option>
+                            <option value="rent_apartment">Wohnung (3 Monate auf massgebenden Termin)</option>
+                            <option value="rent_business">Geschäftsräume (6 Monate auf massgebenden Termin)</option>
+                            <option value="rent_room">Möbliertes Zimmer (2 Wochen auf Periodenende)</option>
+                            <option value="rent_parking">Separater Parkplatz (2 Wochen auf Periodenende)</option>
                         </optgroup>
                         <optgroup label="Versicherungen">
                             <option value="insurance_health_basic">Krankenkasse Grundversicherung (30. November)</option>
+                            <option value="insurance_health_basic_midyear">Grundversicherung Standardmodell (31. März)</option>
                             <option value="insurance_health_extra">Krankenkasse Zusatzversicherung (3 Monate)</option>
                             <option value="insurance_property">Sach-/Autoversicherung (3 Monate)</option>
-                            <option value="insurance_life">Lebensversicherung (3 Monate)</option>
+                            <option value="insurance_life">Lebensversicherung (nach einem Jahr)</option>
                         </optgroup>
                         <optgroup label="Abonnemente">
                             <option value="subscription_fitness">Fitness-Abo (3 Monate vor Ablauf)</option>
@@ -247,26 +248,34 @@
                     </select>
                 </div>
 
-                <div class="form-group" id="workStartGroup" style="display: none;">
-                    <label for="workStartDate">Datum des Arbeitsbeginns
+                <div class="form-group" id="contractStartGroup" style="display: none;">
+                    <label for="contractStartDate" class="required">Vertragsbeginn
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">Zur Berechnung des Dienstjahres und der korrekten Kündigungsfrist.</span>
+                            <span class="tooltip-content">Erforderlich, um das gesetzlich früheste Kündigungsrecht bei Versicherungen zu prüfen.</span>
                         </span>
                     </label>
                     <input type="text"
-                           id="workStartDate"
-                           name="workStartDate"
-                           title="Arbeitsbeginn"
+                           id="contractStartDate"
+                           name="contractStartDate"
+                           title="Vertragsbeginn"
                            pattern="\d{2}\.\d{2}\.\d{4}">
-                    <small class="form-hint">Format: TT.MM.JJJJ (optional)</small>
+                    <small class="form-hint">Format: TT.MM.JJJJ</small>
+                </div>
+
+                <div class="form-group" id="targetEndGroup" style="display: none;">
+                    <label for="targetEndDate" class="required">Gewünschtes Vertragsende
+                        <span class="info-tooltip"><span class="info-icon">?</span><span class="tooltip-content">Den tatsächlichen vertraglichen, ortsüblichen oder Versicherungsjahres-Endtermin eintragen. Er lässt sich aus dem Kündigungsdatum allein nicht bestimmen.</span></span>
+                    </label>
+                    <input type="text" id="targetEndDate" name="targetEndDate" title="Gewünschtes Vertragsende" pattern="\d{2}\.\d{2}\.\d{4}">
+                    <small class="form-hint">Format: TT.MM.JJJJ</small>
                 </div>
 
                 <div class="form-group">
                     <label for="noticeDate" class="required">Datum der Kündigung (Zustellung)
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">Das Datum, an dem die Kündigung dem Empfänger zugeht. Bei eingeschriebenen Briefen: Datum der Zustellung oder Ende der Abholfrist.</span>
+                            <span class="tooltip-content">Das Datum des rechtlich massgebenden Zugangs. Bei eingeschriebenen Briefen können Abholung und Zustellfiktion relevant sein; im Zweifel frühzeitig zustellen.</span>
                         </span>
                     </label>
                     <input type="text"
@@ -280,7 +289,7 @@
 
                 <div class="warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    Achtung: Dies sind gesetzliche Mindestfristen. Vertraglich können längere Fristen vereinbart sein. Prüfen Sie Ihren Vertrag!
+                    Achtung: Gesetzliche Regeln können vertraglich zulässig geändert oder durch AGB konkretisiert sein. Prüfen Sie Vertrag, Police und Sonderregeln.
                 </div>
 
                 <button type="submit">Kündigungstermin berechnen</button>
@@ -321,8 +330,8 @@
                 <div class="step-content">
                     <h3>Mietvertrag Wohnung (OR Art. 266c)</h3>
                     <p>Kündigungsfrist: <strong>3 Monate</strong></p>
-                    <p>Kündigungstermin: <strong>Ortsüblicher Termin</strong> (meist Quartalsende: 31.3., 30.6., 30.9., 31.12.)</p>
-                    <p style="margin-top: 0.5rem;">In vielen Kantonen auch zum Monatsende möglich. Prüfen Sie Ihren Mietvertrag!</p>
+                    <p>Kündigungstermin: <strong>Ortsüblicher Termin</strong>; fehlt ein Ortsgebrauch, Ende einer dreimonatigen Mietdauer.</p>
+                    <p style="margin-top: 0.5rem;">Der Rechner verlangt deshalb den Termin aus Vertrag beziehungsweise Ortsgebrauch.</p>
                 </div>
             </div>
 
@@ -333,7 +342,7 @@
                 <div class="step-content">
                     <h3>Geschäftsräume (OR Art. 266d)</h3>
                     <p>Kündigungsfrist: <strong>6 Monate</strong></p>
-                    <p>Kündigungstermin: <strong>Ortsüblicher Termin</strong> (meist Quartalsende)</p>
+                    <p>Kündigungstermin: <strong>Ortsüblicher Termin</strong>; fehlt ein Ortsgebrauch, Ende einer dreimonatigen Mietdauer.</p>
                     <p style="margin-top: 0.5rem;">Bei Geschäftsmiete sind längere vertragliche Fristen üblich.</p>
                 </div>
             </div>
@@ -345,8 +354,8 @@
                 <div class="step-content">
                     <h3>Versicherungen (VVG/KVG)</h3>
                     <p><strong>Krankenkasse Grund:</strong> Kündigung bis 30. November für Wechsel per 1. Januar</p>
-                    <p><strong>Sachversicherung:</strong> 3 Monate auf Ende Versicherungsjahr</p>
-                    <p style="margin-top: 0.5rem;">Seit VVG 2022: Alle Verträge kündbar nach 3 Jahren mit 3 Monaten Frist.</p>
+                    <p><strong>Sach- und Zusatzversicherung:</strong> 3 Monate auf Ende des dritten oder jedes folgenden Versicherungsjahres (VVG Art. 35a).</p>
+                    <p style="margin-top: 0.5rem;"><strong>Lebensversicherung:</strong> Kündigung durch den Versicherungsnehmer nach Ablauf eines Jahres (VVG Art. 89).</p>
                 </div>
             </div>
 
@@ -358,7 +367,7 @@
                     <h3>Abonnemente</h3>
                     <p><strong>Fitness:</strong> Meist 3 Monate vor Ablauf</p>
                     <p><strong>Handy/Internet:</strong> Meist 60 Tage vor Ablauf</p>
-                    <p style="margin-top: 0.5rem;">Bei Umzug &gt;30km: Ausserordentliche Kündigung oft möglich.</p>
+                    <p style="margin-top: 0.5rem;">Diese Fristen stammen aus Vertrag/AGB und sind keine allgemeinen gesetzlichen Fristen.</p>
                 </div>
             </div>
 
@@ -368,8 +377,8 @@
                 </div>
                 <div class="step-content">
                     <h3>Wichtige Hinweise</h3>
-                    <p><strong>Zugang der Kündigung:</strong> Die Kündigung muss vor Beginn der Frist beim Empfänger eingehen. Bei Einschreiben: spätestens am letzten Tag der Abholfrist.</p>
-                    <p style="margin-top: 0.5rem;"><strong>Formvorschriften:</strong> Mietkündigungen müssen auf amtlichem Formular erfolgen (Wohnung). Arbeitskündigungen sind formfrei.</p>
+                    <p><strong>Zugang der Kündigung:</strong> Massgebend ist grundsätzlich der Zugang beim Empfänger, nicht der Poststempel. Bei Einschreiben können Abholung und Zustellfiktion relevant sein.</p>
+                    <p style="margin-top: 0.5rem;"><strong>Formvorschriften:</strong> Der Vermieter muss Wohn- und Geschäftsräume mit dem kantonal genehmigten Formular kündigen. Arbeitskündigungen sind grundsätzlich formfrei; Schriftform kann vereinbart sein.</p>
                 </div>
             </div>
         </div>
@@ -450,8 +459,8 @@
 
                 <p>Insbesondere wird darauf hingewiesen:</p>
                 <ul>
-                    <li>Der Rechner zeigt nur gesetzliche Mindestfristen. Vertragliche Abweichungen sind möglich.</li>
-                    <li>Prüfen Sie immer Ihren Vertrag auf individuelle Regelungen.</li>
+                    <li>Der Rechner kombiniert gesetzliche Regeln mit ausdrücklich bezeichneten Vertrags-/AGB-Beispielen.</li>
+                    <li>Prüfen Sie Vertrag, Ortsgebrauch, Police und allfällige Sonderregeln.</li>
                     <li>Durchblick Consultancy BV übernimmt keine Haftung für Schäden aus der Nutzung.</li>
                 </ul>
 
@@ -465,8 +474,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
-    <script src="../scripts/utils.js?v=3"></script>
-    <script src="../scripts/pdf-export.js?v=3"></script>
-    <script src="../scripts/kuendigung.js?v=3"></script>
+    <script src="../scripts/utils.js?v=4"></script>
+    <script src="../scripts/pdf-export.js?v=4"></script>
+    <script src="../scripts/kuendigung.js?v=4"></script>
 </body>
 </html>

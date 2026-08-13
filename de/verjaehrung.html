@@ -56,10 +56,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="../css/styles.css?v=2">
+    <link rel="stylesheet" href="../css/styles.css?v=4">
     <style>
         .tool-nav {
             display: flex;
@@ -219,7 +219,7 @@
                             <option value="injury_3">Personenschäden (seit 1.1.2020)</option>
                         </optgroup>
                         <optgroup label="2 Jahre (OR Art. 210/371)">
-                            <option value="sale_2">Kaufvertrag: Mängelrüge bewegliche Sachen</option>
+                            <option value="sale_2">Kaufvertrag: Mängelansprüche bewegliche Sachen</option>
                             <option value="work_defect_2">Werkvertrag: Mängel an beweglichen Werken</option>
                         </optgroup>
                         <optgroup label="1 Jahr">
@@ -252,7 +252,7 @@
                 </div>
 
                 <div class="form-group" id="absoluteDateGroup" style="display: none;">
-                    <label for="absoluteDate">Datum des schädigenden Ereignisses (absolute Frist)
+                    <label for="absoluteDate" class="required">Datum des schädigenden Ereignisses (absolute Frist)
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
                             <span class="tooltip-content">Neben der relativen Frist (ab Kenntnis) gilt eine absolute Frist ab dem schädigenden Ereignis.</span>
@@ -263,7 +263,7 @@
                            name="absoluteDate"
                            title="Datum des Ereignisses"
                            pattern="\d{2}\.\d{2}\.\d{4}">
-                    <small class="form-hint">Format: TT.MM.JJJJ (optional, für absolute Verjährung)</small>
+                    <small class="form-hint">Format: TT.MM.JJJJ</small>
                 </div>
 
                 <div class="form-group">
@@ -282,10 +282,16 @@
                 </div>
 
                 <div class="form-group" id="interruptionDateGroup" style="display: none;">
-                    <label for="interruptionDate" class="required">Datum der Unterbrechung
+                    <label for="interruptionType" class="required">Art der Unterbrechung</label>
+                    <select id="interruptionType" name="interruptionType">
+                        <option value="">Bitte wählen...</option>
+                        <option value="ordinary">Ordentlicher Neubeginn (Art. 137 Abs. 1 OR)</option>
+                        <option value="document_or_judgment">Urkunde oder Gerichtsurteil: neue Frist 10 Jahre (Art. 137 Abs. 2 OR)</option>
+                    </select>
+                    <label for="interruptionDate" class="required" style="margin-top: 1rem;">Datum des Neubeginns
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">Unterbrechungsgründe: Schuldanerkennung, Betreibung, Klage, Schlichtungsgesuch. Ab diesem Datum beginnt eine neue Frist.</span>
+                            <span class="tooltip-content">Bei Anerkennung: Datum der Anerkennung. Bei Betreibung: Datum des letzten Betreibungsakts. Bei Klage oder Schlichtung: erst der Abschluss des Verfahrens vor der betreffenden Instanz. Bei Konkurseingabe: sobald die Forderung wieder geltend gemacht werden kann (Art. 138 OR).</span>
                         </span>
                     </label>
                     <input type="text"
@@ -293,7 +299,7 @@
                            name="interruptionDate"
                            title="Datum der Unterbrechung"
                            pattern="\d{2}\.\d{2}\.\d{4}">
-                    <small class="form-hint">Format: TT.MM.JJJJ</small>
+                    <small class="form-hint">Format: TT.MM.JJJJ. Massgebend ist der gesetzliche Neubeginn nach Art. 138 OR, nicht immer der Tag der Eingabe.</small>
                 </div>
 
                 <div class="warning">
@@ -326,7 +332,8 @@
                         <li><strong>5 Jahre:</strong> Periodische Leistungen wie Miete, Lohn (OR Art. 128)</li>
                         <li><strong>3 Jahre:</strong> Schadenersatz, ungerechtfertigte Bereicherung (OR Art. 60/67)</li>
                         <li><strong>2 Jahre:</strong> Mängelrüge beim Kauf (OR Art. 210)</li>
-                        <li><strong>1 Jahr:</strong> Transportschäden, Versicherungsansprüche</li>
+                        <li><strong>1 Jahr:</strong> Ansprüche aus Frachtvertrag; besondere relative Frist für rechtswidrig entzogene Kulturgüter</li>
+                        <li><strong>5 Jahre:</strong> Versicherungsansprüche nach VVG Art. 46</li>
                     </ul>
                 </div>
             </div>
@@ -344,7 +351,7 @@
                         <li>Klage oder Schlichtungsgesuch</li>
                         <li>Einrede im Prozess</li>
                     </ul>
-                    <p style="margin-top: 0.5rem;">Nach Unterbrechung beginnt eine <strong>neue Frist</strong> zu laufen.</p>
+                    <p style="margin-top: 0.5rem;">Nach der Unterbrechung beginnt die Verjährung neu. Der Neubeginn richtet sich nach Art. 138 OR. Bei Anerkennung in einer Urkunde oder rechtskräftiger gerichtlicher Feststellung beträgt die neue Frist zehn Jahre (Art. 137 Abs. 2 OR).</p>
                 </div>
             </div>
 
@@ -356,11 +363,13 @@
                     <h3>Stillstand der Verjährung</h3>
                     <p>Die Verjährung steht still (OR Art. 134):</p>
                     <ul>
-                        <li>Während Stundung</li>
-                        <li>Bei Unmöglichkeit der Rechtsverfolgung</li>
-                        <li>Zwischen Ehegatten während der Ehe</li>
-                        <li>Gegenüber Minderjährigen (solange keine Vertretung)</li>
+                        <li>für Forderungen der Kinder gegen die Eltern bis zur Volljährigkeit</li>
+                        <li>zwischen Ehegatten während der Ehe und zwischen eingetragenen Partnern während der Partnerschaft</li>
+                        <li>für Forderungen von Arbeitnehmern, die mit dem Arbeitgeber in Hausgemeinschaft leben, während des Arbeitsverhältnisses</li>
+                        <li>solange die Forderung aus objektiven Gründen vor keinem Gericht geltend gemacht werden kann</li>
+                        <li>während eines öffentlichen Inventars sowie bei schriftlich vereinbarten Vergleichs-, Mediations- oder anderen aussergerichtlichen Verfahren</li>
                     </ul>
+                    <p style="margin-top: 0.5rem;"><small>Art. 134 OR enthält weitere Sonderfälle, insbesondere beim Vorsorgeauftrag und bei Nutzniessung.</small></p>
                 </div>
             </div>
 
@@ -485,8 +494,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
-    <script src="../scripts/utils.js?v=3"></script>
-    <script src="../scripts/pdf-export.js?v=3"></script>
-    <script src="../scripts/verjaehrung.js?v=3"></script>
+    <script src="../scripts/utils.js?v=4"></script>
+    <script src="../scripts/pdf-export.js?v=4"></script>
+    <script src="../scripts/verjaehrung.js?v=4"></script>
 </body>
 </html>

@@ -55,7 +55,7 @@ Wird während Gerichtsferien zugestellt, beginnt die Frist am ersten Tag nach Fe
 
 ### Feiertage
 
-**Nationale Feiertage** (in der ganzen Schweiz anerkannt):
+**Schweizweit übliche Feiertage** (nur der 1. August ist eidgenössisch):
 - Neujahr (1. Januar)
 - Auffahrt (Christi Himmelfahrt)
 - Bundesfeiertag (1. August)
@@ -77,11 +77,7 @@ Wird während Gerichtsferien zugestellt, beginnt die Frist am ersten Tag nach Fe
 
 ### Kantonauswahl
 
-Der Fristenrechner bietet eine Kantonauswahl, die automatisch die im jeweiligen Kanton geltenden Feiertage aktiviert.
-
-**Datenquelle:** Die kantonalen Feiertagsregelungen basieren auf den offiziellen Angaben der Schweizerischen Bundeskanzlei und den kantonalen Gesetzgebungen:
-- [Schweizerische Bundeskanzlei – Feiertage](https://www.bk.admin.ch/bk/de/home/politische-rechte/feiertage.html)
-- [Wikipedia – Feiertage in der Schweiz](https://de.wikipedia.org/wiki/Feiertage_in_der_Schweiz)
+Der Kanton wird für die Dokumentation erfasst. Die am konkreten Gerichtsort anerkannten Feiertage werden bewusst manuell gewählt, weil sie in einzelnen Kantonen nach Gemeinde, Bezirk oder Konfession abweichen können. Massgebend ist Art. 142 Abs. 3 ZPO.
 
 ---
 
@@ -136,7 +132,7 @@ Si la notification a lieu pendant les féries, le délai commence le premier jou
 
 ### Jours fériés
 
-**Jours fériés nationaux** (reconnus dans toute la Suisse) :
+**Jours fériés usuels dans toute la Suisse** (seul le 1er août est fédéral) :
 - Nouvel An (1er janvier)
 - Ascension
 - Fête nationale (1er août)
@@ -158,11 +154,7 @@ Si la notification a lieu pendant les féries, le délai commence le premier jou
 
 ### Sélection du canton
 
-Le calculateur propose une sélection de canton qui active automatiquement les jours fériés en vigueur dans le canton concerné.
-
-**Source des données :** Les réglementations cantonales des jours fériés sont basées sur les informations officielles de la Chancellerie fédérale suisse et les législations cantonales :
-- [Chancellerie fédérale suisse – Jours fériés](https://www.bk.admin.ch/bk/fr/home/droits-politiques/jours-feries.html)
-- [Wikipedia – Jours fériés en Suisse](https://fr.wikipedia.org/wiki/Jours_f%C3%A9ri%C3%A9s_en_Suisse)
+Le canton est conservé dans le document de calcul. Les jours fériés reconnus au siège concret du tribunal sont sélectionnés manuellement, car ils peuvent varier selon la commune, le district ou la confession. L’art. 142 al. 3 CPC est déterminant.
 
 ---
 

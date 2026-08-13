@@ -440,8 +440,8 @@
             bottom: calc(100% + 8px);
             left: 50%;
             transform: translateX(-50%);
-            background: var(--text-color);
-            color: white;
+            background: #273746;
+            color: #ffffff;
             padding: 0.75rem 1rem;
             border-radius: 8px;
             font-size: 0.85rem;
@@ -462,12 +462,23 @@
             left: 50%;
             transform: translateX(-50%);
             border: 8px solid transparent;
-            border-top-color: var(--text-color);
+            border-top-color: #273746;
         }
 
-        .info-tooltip:hover .tooltip-content {
+        .info-tooltip:hover .tooltip-content,
+        .info-tooltip:focus-within .tooltip-content {
             opacity: 1;
             visibility: visible;
+        }
+
+        [data-theme="dark"] .info-tooltip .tooltip-content {
+            background: #f1f5f9;
+            color: #172033;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+        }
+
+        [data-theme="dark"] .info-tooltip .tooltip-content::after {
+            border-top-color: #f1f5f9;
         }
 
         /* Mobile: tap to show */
@@ -1874,7 +1885,7 @@
     <div class="container">
         <div class="offline-banner">
             <span>⚡ Offline-Version – Keine Internetverbindung erforderlich</span>
-            <span class="version">Stand: 1.7.2026</span>
+            <span class="version">Stand: 13.8.2026</span>
         </div>
 
     
@@ -1946,7 +1957,7 @@
                     <label>Zustellungsart (Art. 142 Abs. 1<sup>bis</sup> ZPO)
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">Nur für gewöhnliche Post (A-Post, B-Post) relevant. Bei Einschreiben oder A-Post Plus gilt das tatsächliche Zustelldatum.</span>
+                            <span class="tooltip-content">Gilt für gewöhnliche Post ohne Empfangsbestätigung, insbesondere auch für A-Post Plus. Nicht anwenden bei eingeschriebener oder anderer Zustellung gegen Empfangsbestätigung.</span>
                         </span>
                     </label>
                     <div class="checkbox-group">
@@ -2037,16 +2048,16 @@
                     <label>Zu berücksichtigende Feiertage</label>
                     <div class="holiday-selection">
                         <div class="holiday-category">
-                            <h4>Nationale Feiertage
+                            <h4>Schweizweit übliche Feiertage
                                 <span class="info-tooltip">
                                     <span class="info-icon">?</span>
-                                    <span class="tooltip-content">Neujahr (1.1.), Auffahrt, Bundesfeiertag (1.8.) und Weihnachten (25.12.) – in der ganzen Schweiz anerkannt.</span>
+                                    <span class="tooltip-content">Nur der 1. August ist ein eidgenössischer Feiertag. Neujahr, Auffahrt und Weihnachten werden kantonal anerkannt und sind schweizweit üblich.</span>
                                 </span>
                             </h4>
                             <div class="checkbox-group">
                                 <label class="checkbox-label">
                                     <input type="checkbox" name="holidays" value="all_national" checked>
-                                    Alle nationalen Feiertage
+                                    Neujahr, Auffahrt, 1. August und Weihnachten
                                 </label>
                             </div>
                         </div>
@@ -2055,7 +2066,7 @@
                             <h4>Kantonale Feiertage
                                 <span class="info-tooltip">
                                     <span class="info-icon">?</span>
-                                    <span class="tooltip-content">Wählen Sie einen Kanton, um die dort geltenden Feiertage automatisch zu aktivieren.</span>
+                                    <span class="tooltip-content">Der Kanton wird dokumentiert. Wählen Sie die am konkreten Gerichtsort anerkannten Feiertage manuell; diese können lokal oder konfessionell abweichen.</span>
                                 </span>
                             </h4>
                             <div class="canton-selector">
@@ -2145,7 +2156,7 @@
 
                 <div class="warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    Bitte beachten Sie: Dieser Rechner dient nur zur Orientierung. Für die Wahrung von Fristen sind Sie selbst verantwortlich.
+                    Feiertage müssen am konkreten Gerichtsort anerkannt sein (Art. 142 Abs. 3 ZPO). Prüfen Sie die Auswahl bei Gericht oder Kanton. Der Rechner dient nur zur Orientierung.
                 </div>
 
                 <button type="submit">Frist berechnen</button>
@@ -2225,7 +2236,7 @@
                 </div>
                 <div class="step-content">
                     <h3>Kantonale Feiertage</h3>
-                    <p>Neben den nationalen Feiertagen gelten je nach Kanton unterschiedliche Feiertage. Diese werden in der Berechnung berücksichtigt.</p>
+                    <p>Massgebend sind die vom Bundesrecht oder kantonalen Recht anerkannten Feiertage am Gerichtsort. Weil sie lokal abweichen können, werden nur die ausdrücklich gewählten Feiertage berücksichtigt.</p>
                 </div>
             </div>
         </div>
@@ -3064,6 +3075,10 @@ if (document.readyState === 'loading') {
  */
 
 // Gaußsche Osterformel
+function toLocalCalendarDate(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
 function calculateEasterDate(year) {
     const a = year % 19;
     const b = Math.floor(year / 100);
@@ -3094,6 +3109,7 @@ function calculateEasterRelatedDate(year, daysFromEaster) {
 
 // Check if date is in court holidays (Art. 145 ZPO)
 function isInCourtHolidays(date) {
+    date = toLocalCalendarDate(date);
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = date.getDate();
@@ -3117,6 +3133,7 @@ function isInCourtHolidays(date) {
 
 // Get end of court holiday period (Art. 146 ZPO)
 function getCourtHolidayPeriodEnd(date) {
+    date = toLocalCalendarDate(date);
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = date.getDate();
@@ -3153,7 +3170,7 @@ function getCourtHolidayPeriodEnd(date) {
 }
 
 function addDaysToDate(date, days) {
-    const result = new Date(date);
+    const result = toLocalCalendarDate(date);
     result.setDate(result.getDate() + days);
     return result;
 }
@@ -3280,7 +3297,7 @@ function calculateDayDeadline(effectiveStartDate, days, useCourtHolidays, starts
 // Main deadline calculation function
 function calculateDeadline(startDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDeliveryRule = false) {
     let endDate;
-    let effectiveStartDate = new Date(startDate);
+    let effectiveStartDate = toLocalCalendarDate(startDate);
     let startsDuringCourtHolidays = false;
 
     // Art. 142 Abs. 1bis ZPO: Weekend/holiday delivery by ordinary post
@@ -3329,6 +3346,49 @@ function calculateDeadline(startDate, fristType, customValue, useCourtHolidays, 
     }
 
     return endDate;
+}
+
+/**
+ * Returns the legal running-day number shown in the calendar for a day deadline.
+ *
+ * The notification day is not counted (Art. 142 para. 1 CPC). If Art. 146 CPC
+ * applies, the first day after the court holidays is day 1. Court-holiday days
+ * crossed later are not counted, while weekends within a running deadline are.
+ * A final-day shift under Art. 142 para. 3 does not create additional deadline
+ * days. Month deadlines deliberately have no day counter because they are
+ * calculated by calendar months under Art. 142 para. 2.
+ */
+function getDeadlineTimelineCount(date, startDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDeliveryRule = false) {
+    if (fristType.startsWith('months_')) return null;
+
+    const requiredDays = customValue || parseInt(fristType.split('_')[1]);
+    let effectiveDelivery = new Date(startDate);
+    if (useWeekendDeliveryRule) {
+        effectiveDelivery = adjustDeliveryDate(effectiveDelivery, selectedHolidays);
+    }
+
+    let firstRunningDay = addDaysToDate(effectiveDelivery, 1);
+    if (useCourtHolidays) {
+        const firstDayAfterHolidays = getCourtHolidayPeriodEnd(effectiveDelivery);
+        if (firstDayAfterHolidays) firstRunningDay = firstDayAfterHolidays;
+    }
+
+    const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    let current = new Date(firstRunningDay.getFullYear(), firstRunningDay.getMonth(), firstRunningDay.getDate());
+    let count = 0;
+
+    while (current <= target && count < requiredDays) {
+        const isSuspended = useCourtHolidays && isInCourtHolidays(current);
+        if (!isSuspended) {
+            count++;
+            if (current.toDateString() === target.toDateString()) return count;
+        } else if (current.toDateString() === target.toDateString()) {
+            return null;
+        }
+        current.setDate(current.getDate() + 1);
+    }
+
+    return null;
 }
 
 // Calculate court holidays for display
@@ -3381,67 +3441,18 @@ function calculateCourtHolidays(year) {
 
 let datePicker;
 
-// Kantonale Feiertage - Zuordnung nach Kanton
-// Quellen:
-// - Schweizerische Bundeskanzlei: https://www.bk.admin.ch/bk/de/home/politische-rechte/feiertage.html
-// - Wikipedia: https://de.wikipedia.org/wiki/Feiertage_in_der_Schweiz
-const cantonHolidays = {
-    'AG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'AI': ['karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'AR': ['karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'BE': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'BL': ['karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
-    'BS': ['karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
-    'FR': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'GE': ['karfreitag', 'ostermontag', 'pfingstmontag'],
-    'GL': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'allerheiligen', 'stephanstag'],
-    'GR': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'stephanstag'],
-    'JU': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen'],
-    'LU': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'NE': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag'],
-    'NW': ['karfreitag', 'ostermontag', 'pfingstmontag', 'josephstag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'OW': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'SG': ['karfreitag', 'ostermontag', 'pfingstmontag', 'allerheiligen', 'stephanstag'],
-    'SH': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
-    'SO': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'stephanstag'],
-    'SZ': ['berchtoldstag', 'dreikoenige', 'josephstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'TG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag'],
-    'TI': ['dreikoenige', 'josephstag', 'ostermontag', 'tag_der_arbeit', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'UR': ['berchtoldstag', 'dreikoenige', 'josephstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    'VD': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag'],
-    'VS': ['josephstag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis'],
-    'ZG': ['berchtoldstag', 'karfreitag', 'ostermontag', 'pfingstmontag', 'fronleichnam', 'maria_himmelfahrt', 'allerheiligen', 'maria_empfaengnis', 'stephanstag'],
-    // ZH: Berchtoldstag is not a cantonal statutory holiday; leave it manual.
-    'ZH': ['karfreitag', 'ostermontag', 'tag_der_arbeit', 'pfingstmontag', 'stephanstag']
-};
-
 // Kanton aus URL oder localStorage laden
 function getSelectedCanton() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('canton') || localStorage.getItem('frist-canton') || '';
 }
 
-// Kantonauswahl ändern
+// The canton is documented, but holidays are deliberately selected manually.
+// Art. 142 para. 3 CPC refers to the holiday recognized at the court location;
+// in several cantons this varies by municipality or district.
 function selectCanton() {
     const canton = document.getElementById('canton').value;
     localStorage.setItem('frist-canton', canton);
-
-    // Alle kantonalen Feiertage deselektieren
-    document.querySelectorAll('input[name="holidays"]').forEach(cb => {
-        if (cb.value !== 'all_national') {
-            cb.checked = false;
-        }
-    });
-
-    // Feiertage des gewählten Kantons selektieren
-    if (canton && cantonHolidays[canton]) {
-        cantonHolidays[canton].forEach(holiday => {
-            const checkbox = document.querySelector(`input[name="holidays"][value="${holiday}"]`);
-            if (checkbox) {
-                checkbox.checked = true;
-            }
-        });
-    }
 }
 
 // Save current language to localStorage for redirect
@@ -3696,13 +3707,13 @@ function displayResult(startDate, endDate, fristType, customValue, useCourtHolid
     `;
 
     // Generate calendar
-    generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays);
+    generateCalendar(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery);
 
     result.style.display = 'block';
     result.scrollIntoView({ behavior: 'smooth' });
 }
 
-function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays) {
+function generateCalendar(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery) {
     const timeline = document.querySelector('.timeline');
     timeline.innerHTML = '';
 
@@ -3716,19 +3727,17 @@ function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays
     calendarGrid.innerHTML = weekdays.map(d => `<div class="weekday-header">${d}</div>`).join('');
 
     // Find first Monday before or on start date
-    let currentDate = new Date(startDate);
+    const calendarStartDate = toLocalCalendarDate(startDate);
+    const calendarEndDate = toLocalCalendarDate(endDate);
+    let currentDate = new Date(calendarStartDate);
     while (currentDate.getDay() !== 1) {
         currentDate.setDate(currentDate.getDate() - 1);
     }
 
-    let dayCount = 0;
-    const isMonthFrist = document.getElementById('fristType').value.startsWith('months_');
-
-    while (currentDate <= endDate || currentDate.getDay() !== 1) {
-        const isBeforeStart = currentDate < startDate;
-        const isAfterEnd = currentDate > endDate;
-        const isStartDate = currentDate.toDateString() === startDate.toDateString();
-        const isEndDate = currentDate.toDateString() === endDate.toDateString();
+    while (currentDate <= calendarEndDate || currentDate.getDay() !== 1) {
+        const isBeforeStart = currentDate < calendarStartDate;
+        const isAfterEnd = currentDate > calendarEndDate;
+        const isEndDate = currentDate.toDateString() === calendarEndDate.toDateString();
 
         let dateClass = 'normal';
         if (isBeforeStart || isAfterEnd) {
@@ -3741,14 +3750,15 @@ function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays
             dateClass = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'holiday';
         }
 
-        // Count days for day deadlines
-        if (!isBeforeStart && !isAfterEnd && dateClass !== 'empty-day') {
-            if (!isMonthFrist && !isStartDate) {
-                dayCount++;
-            } else if (isMonthFrist) {
-                dayCount++;
-            }
-        }
+        const dayCount = dateClass === 'empty-day' ? null : getDeadlineTimelineCount(
+            currentDate,
+            startDate,
+            fristType,
+            customValue,
+            useCourtHolidays,
+            selectedHolidays,
+            useWeekendDelivery
+        );
 
         const dayBox = document.createElement('div');
         dayBox.className = `date-box ${dateClass}`;
@@ -3756,7 +3766,7 @@ function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays
         if (dateClass !== 'empty-day') {
             dayBox.innerHTML = `
                 <div class="date">${currentDate.getDate()}.${currentDate.getMonth() + 1}.</div>
-                ${dayCount > 0 ? `<div class="count">${dayCount}</div>` : ''}
+                ${dayCount !== null ? `<div class="count">${dayCount}</div>` : ''}
             `;
         }
 
@@ -3764,7 +3774,7 @@ function generateCalendar(startDate, endDate, useCourtHolidays, selectedHolidays
         currentDate.setDate(currentDate.getDate() + 1);
 
         // Safety break
-        if (dayCount > 365) break;
+        if (timeline.children.length > 400) break;
     }
 }
 
@@ -3829,7 +3839,7 @@ function saveCalculationData(startDate, endDate, fristType, customValue, useCour
 
     // Kalenderdaten sammeln
     const calendarData = typeof FristPdfExport !== 'undefined'
-        ? FristPdfExport.collectCalendarData(startDate, endDate, useCourtHolidays, selectedHolidays)
+        ? FristPdfExport.collectCalendarData(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery)
         : [];
 
     lastCalculationData = {
@@ -4070,24 +4080,21 @@ const FristPdfExport = {
     /**
      * Sammelt die Kalenderdaten aus dem DOM
      */
-    collectCalendarData(startDate, endDate, useCourtHolidays, selectedHolidays) {
+    collectCalendarData(startDate, endDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDelivery) {
         const calendarData = [];
+        const calendarStartDate = toLocalCalendarDate(startDate);
+        const calendarEndDate = toLocalCalendarDate(endDate);
 
         // Ersten Montag vor oder am Startdatum finden
-        let currentDate = new Date(startDate);
+        let currentDate = new Date(calendarStartDate);
         while (currentDate.getDay() !== 1) {
             currentDate.setDate(currentDate.getDate() - 1);
         }
 
-        const isMonthFrist = document.getElementById('fristType')?.value?.startsWith('months_') || false;
-        let dayCount = 0;
-
-        while (currentDate <= endDate || currentDate.getDay() !== 1) {
-            const isBeforeStart = currentDate < startDate;
-            const isAfterEnd = currentDate > endDate;
-            const isEndDate = currentDate.toDateString() === endDate.toDateString();
-            const isStartDate = currentDate.toDateString() === startDate.toDateString();
-
+        while (currentDate <= calendarEndDate || currentDate.getDay() !== 1) {
+            const isBeforeStart = currentDate < calendarStartDate;
+            const isAfterEnd = currentDate > calendarEndDate;
+            const isEndDate = currentDate.toDateString() === calendarEndDate.toDateString();
             let type = 'normal';
             if (isBeforeStart || isAfterEnd) {
                 type = 'empty';
@@ -4099,20 +4106,21 @@ const FristPdfExport = {
                 type = currentDate.getDay() === 0 || currentDate.getDay() === 6 ? 'weekend' : 'holiday';
             }
 
-            // Tag zählen
-            if (!isBeforeStart && !isAfterEnd && type !== 'empty') {
-                if (!isMonthFrist && !isStartDate) {
-                    dayCount++;
-                } else if (isMonthFrist) {
-                    dayCount++;
-                }
-            }
+            const dayCount = type === 'empty' ? null : getDeadlineTimelineCount(
+                currentDate,
+                startDate,
+                fristType,
+                customValue,
+                useCourtHolidays,
+                selectedHolidays,
+                useWeekendDelivery
+            );
 
             calendarData.push({
                 date: new Date(currentDate),
                 dateStr: `${currentDate.getDate()}.${currentDate.getMonth() + 1}.`,
                 type: type,
-                count: type !== 'empty' ? dayCount : null
+                count: dayCount
             });
 
             currentDate.setDate(currentDate.getDate() + 1);
@@ -4281,12 +4289,14 @@ const VerjaehrungPdfExport = {
 
         const inputLines = [
             [texts.claimType, data.claimType],
+            [texts.selectedLegalBasis, data.legalBasis || '-'],
             [texts.claimDate, this.formatDate(data.claimDate, lang)],
             [texts.limitationPeriod, data.periodText]
         ];
 
         if (data.interrupted) {
             inputLines.push([texts.interrupted, texts.yes]);
+            inputLines.push([texts.interruptionKind, data.interruptionKind || '-']);
             inputLines.push([texts.interruptionDate, this.formatDate(data.interruptionDate, lang)]);
         }
 
@@ -4410,9 +4420,11 @@ const VerjaehrungPdfExport = {
                 date: 'Date',
                 inputData: 'Données saisies',
                 claimType: 'Type de créance',
+                selectedLegalBasis: 'Base légale sélectionnée',
                 claimDate: 'Date de naissance',
                 limitationPeriod: 'Délai de prescription',
                 interrupted: 'Interruption',
+                interruptionKind: 'Nouveau départ',
                 interruptionDate: 'Date d\'interruption',
                 yes: 'Oui',
                 result: 'Résultat',
@@ -4428,9 +4440,11 @@ const VerjaehrungPdfExport = {
             date: 'Datum',
             inputData: 'Eingabedaten',
             claimType: 'Art der Forderung',
+            selectedLegalBasis: 'Gewählte Rechtsgrundlage',
             claimDate: 'Entstehungsdatum',
             limitationPeriod: 'Verjährungsfrist',
             interrupted: 'Unterbrechung',
+            interruptionKind: 'Neubeginn',
             interruptionDate: 'Unterbrechungsdatum',
             yes: 'Ja',
             result: 'Ergebnis',
@@ -4486,6 +4500,7 @@ const KuendigungPdfExport = {
         const inputLines = [
             [texts.contractType, data.contractType],
             [texts.noticePeriod, data.noticePeriod],
+            [texts.noticeDate, this.formatDate(data.noticeDate, lang)],
             [texts.plannedDate, this.formatDate(data.plannedDate, lang)]
         ];
 
@@ -4601,6 +4616,7 @@ const KuendigungPdfExport = {
                 inputData: 'Données saisies',
                 contractType: 'Type de contrat',
                 noticePeriod: 'Délai de préavis',
+                noticeDate: 'Résiliation reçue le',
                 plannedDate: 'Date souhaitée',
                 additionalInfo: 'Informations',
                 result: 'Résultat',
@@ -4619,6 +4635,7 @@ const KuendigungPdfExport = {
             inputData: 'Eingabedaten',
             contractType: 'Vertragsart',
             noticePeriod: 'Kündigungsfrist',
+            noticeDate: 'Kündigung zugegangen am',
             plannedDate: 'Gewünschtes Datum',
             additionalInfo: 'Zusatzinfo',
             result: 'Ergebnis',

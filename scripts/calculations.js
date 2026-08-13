@@ -4,6 +4,10 @@
  */
 
 // Gaußsche Osterformel
+function toLocalCalendarDate(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
 function calculateEasterDate(year) {
     const a = year % 19;
     const b = Math.floor(year / 100);
@@ -34,6 +38,7 @@ function calculateEasterRelatedDate(year, daysFromEaster) {
 
 // Check if date is in court holidays (Art. 145 ZPO)
 function isInCourtHolidays(date) {
+    date = toLocalCalendarDate(date);
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = date.getDate();
@@ -57,6 +62,7 @@ function isInCourtHolidays(date) {
 
 // Get end of court holiday period (Art. 146 ZPO)
 function getCourtHolidayPeriodEnd(date) {
+    date = toLocalCalendarDate(date);
     const year = date.getFullYear();
     const month = date.getMonth();
     const day = date.getDate();
@@ -93,7 +99,7 @@ function getCourtHolidayPeriodEnd(date) {
 }
 
 function addDaysToDate(date, days) {
-    const result = new Date(date);
+    const result = toLocalCalendarDate(date);
     result.setDate(result.getDate() + days);
     return result;
 }
@@ -220,7 +226,7 @@ function calculateDayDeadline(effectiveStartDate, days, useCourtHolidays, starts
 // Main deadline calculation function
 function calculateDeadline(startDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDeliveryRule = false) {
     let endDate;
-    let effectiveStartDate = new Date(startDate);
+    let effectiveStartDate = toLocalCalendarDate(startDate);
     let startsDuringCourtHolidays = false;
 
     // Art. 142 Abs. 1bis ZPO: Weekend/holiday delivery by ordinary post
@@ -269,6 +275,49 @@ function calculateDeadline(startDate, fristType, customValue, useCourtHolidays, 
     }
 
     return endDate;
+}
+
+/**
+ * Returns the legal running-day number shown in the calendar for a day deadline.
+ *
+ * The notification day is not counted (Art. 142 para. 1 CPC). If Art. 146 CPC
+ * applies, the first day after the court holidays is day 1. Court-holiday days
+ * crossed later are not counted, while weekends within a running deadline are.
+ * A final-day shift under Art. 142 para. 3 does not create additional deadline
+ * days. Month deadlines deliberately have no day counter because they are
+ * calculated by calendar months under Art. 142 para. 2.
+ */
+function getDeadlineTimelineCount(date, startDate, fristType, customValue, useCourtHolidays, selectedHolidays, useWeekendDeliveryRule = false) {
+    if (fristType.startsWith('months_')) return null;
+
+    const requiredDays = customValue || parseInt(fristType.split('_')[1]);
+    let effectiveDelivery = new Date(startDate);
+    if (useWeekendDeliveryRule) {
+        effectiveDelivery = adjustDeliveryDate(effectiveDelivery, selectedHolidays);
+    }
+
+    let firstRunningDay = addDaysToDate(effectiveDelivery, 1);
+    if (useCourtHolidays) {
+        const firstDayAfterHolidays = getCourtHolidayPeriodEnd(effectiveDelivery);
+        if (firstDayAfterHolidays) firstRunningDay = firstDayAfterHolidays;
+    }
+
+    const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    let current = new Date(firstRunningDay.getFullYear(), firstRunningDay.getMonth(), firstRunningDay.getDate());
+    let count = 0;
+
+    while (current <= target && count < requiredDays) {
+        const isSuspended = useCourtHolidays && isInCourtHolidays(current);
+        if (!isSuspended) {
+            count++;
+            if (current.toDateString() === target.toDateString()) return count;
+        } else if (current.toDateString() === target.toDateString()) {
+            return null;
+        }
+        current.setDate(current.getDate() + 1);
+    }
+
+    return null;
 }
 
 // Calculate court holidays for display

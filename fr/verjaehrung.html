@@ -56,10 +56,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="../css/styles.css?v=2">
+    <link rel="stylesheet" href="../css/styles.css?v=4">
     <style>
         .tool-nav {
             display: flex;
@@ -252,7 +252,7 @@
                 </div>
 
                 <div class="form-group" id="absoluteDateGroup" style="display: none;">
-                    <label for="absoluteDate">Date de l'événement dommageable (délai absolu)
+                    <label for="absoluteDate" class="required">Date de l'événement dommageable (délai absolu)
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
                             <span class="tooltip-content">En plus du délai relatif (dès la connaissance), un délai absolu s'applique dès l'événement dommageable.</span>
@@ -263,7 +263,7 @@
                            name="absoluteDate"
                            title="Date de l'événement"
                            pattern="\d{2}\.\d{2}\.\d{4}">
-                    <small class="form-hint">Format: JJ.MM.AAAA (optionnel, pour prescription absolue)</small>
+                    <small class="form-hint">Format: JJ.MM.AAAA</small>
                 </div>
 
                 <div class="form-group">
@@ -282,10 +282,16 @@
                 </div>
 
                 <div class="form-group" id="interruptionDateGroup" style="display: none;">
-                    <label for="interruptionDate" class="required">Date de l'interruption
+                    <label for="interruptionType" class="required">Type d'interruption</label>
+                    <select id="interruptionType" name="interruptionType">
+                        <option value="">Veuillez choisir...</option>
+                        <option value="ordinary">Nouveau départ ordinaire (art. 137 al. 1 CO)</option>
+                        <option value="document_or_judgment">Titre ou jugement: nouveau délai de 10 ans (art. 137 al. 2 CO)</option>
+                    </select>
+                    <label for="interruptionDate" class="required" style="margin-top: 1rem;">Date du nouveau départ
                         <span class="info-tooltip">
                             <span class="info-icon">?</span>
-                            <span class="tooltip-content">Causes d'interruption: reconnaissance de dette, poursuite, action en justice, requête de conciliation. Un nouveau délai commence dès cette date.</span>
+                            <span class="tooltip-content">Reconnaissance: date de la reconnaissance. Poursuite: dernier acte de poursuite. Action ou conciliation: seulement lorsque l'instance concernée est terminée. Faillite: lorsque la créance peut à nouveau être invoquée (art. 138 CO).</span>
                         </span>
                     </label>
                     <input type="text"
@@ -293,7 +299,7 @@
                            name="interruptionDate"
                            title="Date de l'interruption"
                            pattern="\d{2}\.\d{2}\.\d{4}">
-                    <small class="form-hint">Format: JJ.MM.AAAA</small>
+                    <small class="form-hint">Format: JJ.MM.AAAA. La date déterminante est celle de l'art. 138 CO, pas toujours la date du dépôt.</small>
                 </div>
 
                 <div class="warning">
@@ -326,7 +332,8 @@
                         <li><strong>5 ans:</strong> Prestations périodiques comme loyer, salaire (CO art. 128)</li>
                         <li><strong>3 ans:</strong> Dommages-intérêts, enrichissement illégitime (CO art. 60/67)</li>
                         <li><strong>2 ans:</strong> Garantie pour défauts à l'achat (CO art. 210)</li>
-                        <li><strong>1 an:</strong> Dommages de transport, assurances</li>
+                        <li><strong>1 an:</strong> Créances du contrat de transport; délai relatif spécial pour les biens culturels illicitement soustraits</li>
+                        <li><strong>5 ans:</strong> Créances d'assurance selon l'art. 46 LCA</li>
                     </ul>
                 </div>
             </div>
@@ -344,7 +351,7 @@
                         <li>Action en justice ou requête de conciliation</li>
                         <li>Exception soulevée en procès</li>
                     </ul>
-                    <p style="margin-top: 0.5rem;">Après l'interruption, un <strong>nouveau délai</strong> commence à courir.</p>
+                    <p style="margin-top: 0.5rem;">Après l'interruption, la prescription recommence. Le moment du nouveau départ est régi par l'art. 138 CO. Si la dette est reconnue dans un titre ou constatée par jugement, le nouveau délai est de dix ans (art. 137 al. 2 CO).</p>
                 </div>
             </div>
 
@@ -356,11 +363,13 @@
                     <h3>Suspension de la prescription</h3>
                     <p>La prescription est suspendue (CO art. 134):</p>
                     <ul>
-                        <li>Pendant un sursis</li>
-                        <li>En cas d'impossibilité de faire valoir la créance</li>
-                        <li>Entre époux pendant le mariage</li>
-                        <li>Envers les mineurs (tant qu'il n'y a pas de représentation)</li>
+                        <li>pour les créances des enfants contre leurs parents jusqu’à la majorité</li>
+                        <li>entre époux pendant le mariage et entre partenaires enregistrés pendant le partenariat</li>
+                        <li>pour les créances des travailleurs vivant dans le ménage de l’employeur pendant les rapports de travail</li>
+                        <li>tant que la créance ne peut objectivement être invoquée devant aucun tribunal</li>
+                        <li>pendant l’inventaire public et pendant une procédure extrajudiciaire convenue par écrit, notamment médiation ou transaction</li>
                     </ul>
+                    <p style="margin-top: 0.5rem;"><small>L’art. 134 CO prévoit d’autres cas particuliers, notamment pour le mandat pour cause d’inaptitude et l’usufruit.</small></p>
                 </div>
             </div>
 
@@ -485,8 +494,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/4.2.1/jspdf.umd.min.js"></script>
-    <script src="../scripts/utils.js?v=3"></script>
-    <script src="../scripts/pdf-export.js?v=3"></script>
-    <script src="../scripts/verjaehrung.js?v=3"></script>
+    <script src="../scripts/utils.js?v=4"></script>
+    <script src="../scripts/pdf-export.js?v=4"></script>
+    <script src="../scripts/verjaehrung.js?v=4"></script>
 </body>
 </html>

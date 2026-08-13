@@ -381,8 +381,8 @@
             bottom: calc(100% + 8px);
             left: 50%;
             transform: translateX(-50%);
-            background: var(--text-color);
-            color: white;
+            background: #273746;
+            color: #ffffff;
             padding: 0.75rem 1rem;
             border-radius: 8px;
             font-size: 0.85rem;
@@ -403,12 +403,23 @@
             left: 50%;
             transform: translateX(-50%);
             border: 8px solid transparent;
-            border-top-color: var(--text-color);
+            border-top-color: #273746;
         }
 
-        .info-tooltip:hover .tooltip-content {
+        .info-tooltip:hover .tooltip-content,
+        .info-tooltip:focus-within .tooltip-content {
             opacity: 1;
             visibility: visible;
+        }
+
+        [data-theme="dark"] .info-tooltip .tooltip-content {
+            background: #f1f5f9;
+            color: #172033;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+        }
+
+        [data-theme="dark"] .info-tooltip .tooltip-content::after {
+            border-top-color: #f1f5f9;
         }
 
         /* Mobile: tap to show */
