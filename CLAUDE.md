@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Deployment
 
-Hosted via **Cloudflare Pages** with automatic deployment on push to main branch.
+Hosted via **Coolify** with automatic deployment on push to the main branch.
 
 - Build command: (none)
 - Build output: (none)

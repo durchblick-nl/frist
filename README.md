@@ -183,7 +183,7 @@ frist/
 - Vanilla HTML/CSS/JavaScript (kein Framework)
 - Bilingue DE/FR avec détection automatique
 - Aucun backend – calculs côté client
-- Hébergé sur Cloudflare Pages
+- Hébergé via Coolify
 - Open Source
 
 ## Offline-Versionen | Versions hors ligne
